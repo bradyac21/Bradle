@@ -25,16 +25,10 @@ struct AttemptView: View {
                 }
             }
         }
-        .phaseAnimator(ShakePhase.phases, trigger: mainViewModel.shouldShake) { content, phase in
-            content
-                .offset(x: phase.xOffset)
-        } animation: { phase in
-            .spring(duration: 0.1)
-        }
     }
 }
 
-#Preview2 {
+#Preview {
     AttemptView(attemptCase: .empty)
         .environmentObject(MainViewModel())
 }
