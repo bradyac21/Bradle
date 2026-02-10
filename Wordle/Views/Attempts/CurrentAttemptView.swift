@@ -34,7 +34,7 @@ struct AttemptView: View {
     }
 }
 
-#Preview {
+#Preview2 {
     AttemptView(attemptCase: .empty)
         .environmentObject(MainViewModel())
 }
