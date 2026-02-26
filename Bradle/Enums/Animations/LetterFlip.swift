@@ -15,15 +15,8 @@ enum LetterFlip: CaseIterable {
     var yScale: CGFloat {
         switch self {
         case .initial: 1
-        case .halfway: -0.5
+        case .halfway: 0
         case .end: 1
-        }
-    }
-    
-    var duration: CGFloat {
-        switch self {
-        case .initial, .halfway: 0.4
-        case .end: 0
         }
     }
     

@@ -12,7 +12,7 @@ struct StartView: View {
     
     var body: some View {
         ZStack {
-            lightBackdround.ignoresSafeArea()
+            lightBackground.ignoresSafeArea()
             VStack {
                 Spacer()
                 // Bradle logo
@@ -60,13 +60,6 @@ struct StartView: View {
                 
                 Spacer()
             }
-        }.onAppear {
-            for family in UIFont.familyNames.sorted() {
-                        print("Family: \(family)")
-                        for name in UIFont.fontNames(forFamilyName: family) {
-                            print("   \(name)")
-                        }
-                    }
         }
     }
 }
@@ -95,7 +88,7 @@ struct BradleButtonLabel: View {
             .background {
                 Capsule()
                     .stroke(bradleDarkGray, lineWidth: 2)
-                    .fill(fill ? bradleDarkGray : lightBackdround)
+                    .fill(fill ? bradleDarkGray : lightBackground)
             }
             .onTapGesture {
                 action()

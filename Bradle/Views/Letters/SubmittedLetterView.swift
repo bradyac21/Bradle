@@ -23,12 +23,14 @@ struct SubmittedLetterView: View {
                 .aspectRatio(1.0, contentMode: .fit)
                 .border(color == .clear ? Color(UIColor.darkGray) : .clear)
                 .foregroundStyle(color)
-                .phaseAnimator(FrameFlip.phases, trigger: flip) { content, phase in
-                    content
-                        .scaleEffect(y: phase.yScale)
-                } animation: { phase in
-                        .easeInOut(duration: phase.duration).delay(getFlipDelay(for: phase))
-                }
+//                .phaseAnimator(FrameFlip.phases, trigger: flip) { content, phase in
+//                    content
+//                        .scaleEffect(y: phase.yScale)
+//                } animation: { phase in
+//                        .linear(duration: phase.duration).delay(getFlipDelay(for: phase))
+//                }
+            .scaleEffect(x: 1, y: flip ? -1 : 1)
+
             Text(letter.rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
                 .foregroundStyle(.white)
@@ -36,12 +38,11 @@ struct SubmittedLetterView: View {
                     content
                         .scaleEffect(y: phase.yScale)
                 } animation: { phase in
-                        .easeInOut(duration: phase.duration).delay(getFlipDelay(for: phase))
+                        .linear(duration: 0.2).delay(getFlipDelay(for: phase))
                 }
         }
         
         // Flip animation on appear
-        //.scaleEffect(x: 1, y: flip ? -1 : 1)
         // Float animation on success
         .phaseAnimator(FloatAnimation.phases, trigger: float) { content, phase in
             content.offset(y: phase.yOffset)
@@ -54,12 +55,9 @@ struct SubmittedLetterView: View {
             if index == 0 {
                 bradleViewModel.pauseSubmit = true
             }
-            withAnimation(.easeInOut(duration: 0.4).delay(0.4 * index)) {
+            withAnimation(.linear(duration: 0.4).delay(0.4 * index)) {
                 flip = true
             } completion: {
-//                withAnimation(.linear(duration: 0)) {
-//                    flip = false
-//                }
                 if index == 4 {
                     bradleViewModel.pauseSubmit = false
                 }

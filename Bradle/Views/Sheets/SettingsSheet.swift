@@ -103,7 +103,6 @@ struct ToggleRow: View {
                     }
                     Spacer()
                 }
-                .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .containerRelativeFrame(.horizontal) { length, _ in
                     length * 0.7

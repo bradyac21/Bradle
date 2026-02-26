@@ -36,7 +36,7 @@ struct LogInSheet: View {
                 Divider()
                     .padding(.bottom, 25)
                     .frame(width: .infinity, height: 1)
-                    .background(lightBackdround)
+                    .background(lightBackground)
                     .ignoresSafeArea()
                 Text("Log in or create an account")
                     .fontWeight(.semibold)

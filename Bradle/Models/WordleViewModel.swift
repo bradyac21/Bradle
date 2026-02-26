@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UserNotifications
 
 class BradleViewModel: ObservableObject {
     @Published var location: AppLocation = .start
@@ -134,7 +135,7 @@ class BradleViewModel: ObservableObject {
             print("Game Complete.")
             return
         }
-        
+                
         var statusArray = Array(repeating: Status.notTried, count: 5)
         for (index, letter) in attempt.enumerated() {
             if targetWord.contains(letter) {
