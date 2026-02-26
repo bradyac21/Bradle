@@ -10,14 +10,21 @@ import SwiftUI
 struct SettingsSheet: View {
     @Environment(\.dismiss) var dismiss
     
-    @State var hardMode: Bool = false
-    @State var darkMode: Bool = true
-    @State var highContrastMode: Bool = false
-    @State var softwareKeyboardOnly: Bool = false
+    @AppStorage("hardMode") var hardMode: Bool = false
+    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
+    @AppStorage("highContrastMode") var highContrastMode: Bool = false
+    @AppStorage("softwareKeyboardOnly") var softwareKeyboardOnly: Bool = false
     
     var body: some View {
         ZStack {
-            bradleDarkGray.ignoresSafeArea()
+            
+            // Background color
+            if darkModeEnabled {
+                BradleColors.dark.ignoresSafeArea()
+            } else {
+                BradleColors.light.ignoresSafeArea()
+            }
+            
             VStack {
                 ZStack {
                     HStack {
@@ -26,7 +33,6 @@ struct SettingsSheet: View {
                             dismiss()
                         }, label: {
                             Image(systemName: "xmark")
-                                .foregroundStyle(.white)
                         })
                         .buttonStyle(.plain)
                     }
@@ -35,6 +41,7 @@ struct SettingsSheet: View {
                 }
                 .padding(.vertical)
                 .padding(.horizontal, 25)
+                
                 Spacer()
                 
                 VStack {
@@ -48,7 +55,7 @@ struct SettingsSheet: View {
                     ToggleRow(
                         title: "Dark Theme",
                         numLines: 0,
-                        value: $darkMode
+                        value: $darkModeEnabled
                     )
                     
                     ToggleRow(
@@ -68,7 +75,7 @@ struct SettingsSheet: View {
 
                 Spacer()
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(darkModeEnabled ? .white : BradleColors.dark)
         }
     }
 }
@@ -88,6 +95,7 @@ struct ToggleRow: View {
     var description: String? = nil
     var numLines: Int = 1
     @Binding var value: Bool
+    var action: (() -> ())?
     
     var body: some View {
         VStack {
@@ -107,7 +115,8 @@ struct ToggleRow: View {
                 .containerRelativeFrame(.horizontal) { length, _ in
                     length * 0.7
                 }
-                Toggle(isOn: $value) {}
+                Toggle(isOn: $value) {
+                }
             }
             Divider()
                 .background(Color(UIColor.lightGray))

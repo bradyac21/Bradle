@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct StartView: View {
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
     
     var body: some View {
         ZStack {
-            lightBackground.ignoresSafeArea()
+            BradleColors.light.ignoresSafeArea()
             VStack {
                 Spacer()
                 // Bradle logo
@@ -37,12 +37,12 @@ struct StartView: View {
                 
                 // Play button
                 BradleButtonLabel("Play", fill: true) {
-                    bradleViewModel.location = .game
+                    gameRunner.location = .game
                 }
                 
                 // Log in
                 BradleButtonLabel("Log in") {
-                    bradleViewModel.sheet = .login
+                    gameRunner.sheet = .login
                 }
                 
                 // Subscribe
@@ -66,7 +66,7 @@ struct StartView: View {
 
 #Preview {
     StartView()
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }
 
 struct BradleButtonLabel: View {
@@ -82,13 +82,13 @@ struct BradleButtonLabel: View {
     
     var body: some View {
         Text(label)
-            .foregroundStyle(fill ? .white : bradleDarkGray)
+            .foregroundStyle(fill ? .white : BradleColors.dark)
             .frame(width: 150, height: 20)
             .padding(.vertical, 12.5)
             .background {
                 Capsule()
-                    .stroke(bradleDarkGray, lineWidth: 2)
-                    .fill(fill ? bradleDarkGray : lightBackground)
+                    .stroke(BradleColors.dark, lineWidth: 2)
+                    .fill(fill ? BradleColors.dark : BradleColors.light)
             }
             .onTapGesture {
                 action()

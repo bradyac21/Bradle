@@ -11,7 +11,7 @@ struct VictoryScreen: View {
     @Environment(\.dismiss) var dismiss
     var body: some View {
         ZStack {
-            darkBackground.ignoresSafeArea()
+            BradleColors.dark.ignoresSafeArea()
             
             VStack {
                 Divider()

@@ -46,21 +46,20 @@ enum KeyboardButton: String, CaseIterable, Hashable {
     // MARK: - Variables
     
     /// The View the appears on the Keyboard for a key
-    public var icon: any View {
+    public var icon: AnyView {
         if self == .backspace {
-            return Image(systemName: "delete.left")
+            AnyView(Image(systemName: "delete.left"))
         } else {
-            return Text(self.rawValue).font(.custom("NYTFranklin-Bold", size: 15))
-
+            AnyView(Text(self.rawValue).font(.custom("NYTFranklin-Bold", size: 15)))
         }
     }
     
     /// The width of each key
     public var widthScale: CGFloat {
         if self == .backspace || self == .enter {
-            return UIScreen.main.bounds.width * (2/11)
+            return 0.181818
         } else {
-            return UIScreen.main.bounds.width * (1/11)
+            return 0.090909
         }
     }
     

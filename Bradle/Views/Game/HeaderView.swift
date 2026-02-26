@@ -9,12 +9,13 @@ import SwiftUI
 
 struct HeaderView: View {
     
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
+    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     
     public var body: some View {
         HStack {
             Button(action: {
-                bradleViewModel.sheet = .howToPlay
+                gameRunner.sheet = .howToPlay
             }, label: {
                 Image(systemName: "questionmark.circle")
             })
@@ -23,17 +24,17 @@ struct HeaderView: View {
                 .font(.headline)
             Spacer()
             Button(action: {
-                bradleViewModel.sheet = .settings
+                gameRunner.sheet = .settings
             }, label: {
                 Image(systemName: "gear")
             })
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(darkModeEnabled ? .white : BradleColors.dark)
     }
 }
 
 #Preview {
     HeaderView()
         .background(.black)
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }

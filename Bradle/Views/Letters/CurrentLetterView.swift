@@ -9,38 +9,50 @@ import SwiftUI
 
 struct CurrentLetterView: View {
     var index: Int
-    @State var pop: Bool = false
+    @State var shouldPop: Bool = false
+    @State var borderColor: Color = BradleColors.lightGray
     
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
     
     public var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 1)
                 .aspectRatio(1.0, contentMode: .fit)
                 .foregroundStyle(.clear)
-                .border(Color(UIColor.darkGray), width: 1)
-                .phaseAnimator(Pop.phases, trigger: pop) { content, phase in
-                    content
-                        .scaleEffect(phase.scale)
-                } animation: { _ in
-                    .linear(duration: 0.025)
-                }
-            Text(bradleViewModel.currentAttempt.attempt[index].rawValue)
+                .border(borderColor, width: 2)
+                .popAnimation(trigger: shouldPop)
+            
+            Text(gameRunner.currentAttempt.attempt[index].rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
                 .foregroundStyle(.white)
         }
-        .onChange(of: bradleViewModel.currentAttempt.attempt[index]) { _, newValue in
+        .onChange(of: gameRunner.currentAttempt.attempt[index]) { _, newValue in
             if newValue != .empty {
-                pop.toggle()
+                shouldPop.toggle()
+                borderColor = BradleColors.lightGray
+            } else {
+                borderColor = BradleColors.darkGray
             }
         }
+    }
+}
+
+private extension View {
+    func popAnimation(trigger: Bool) -> some View {
+        self
+            .phaseAnimator(Pop.phases, trigger: trigger) { content, phase in
+                content
+                    .scaleEffect(phase.scale)
+            } animation: { _ in
+                .linear(duration: 0.025)
+            }
     }
 }
 
 #Preview {
     CurrentLetterView(index: 0)
         .background {
-            darkBackground
+            BradleColors.dark
         }
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }

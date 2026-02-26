@@ -8,33 +8,28 @@
 import SwiftUI
 
 struct SubmittedLetterView: View {
-    @State var flip: Bool = false
-    @State var float: Bool = false
+    @State var shouldFlip: Bool = false
+    @State var shouldFloat: Bool = false
     @State var color: Color = .clear
+    @State var showBorder: Bool = true
     var letter: Letter
     var status: Status
     var index: CGFloat
     
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
     
     public var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 1)
                 .aspectRatio(1.0, contentMode: .fit)
-                .border(color == .clear ? Color(UIColor.darkGray) : .clear)
+                .border(showBorder ? BradleColors.darkGray : .clear)
                 .foregroundStyle(color)
-//                .phaseAnimator(FrameFlip.phases, trigger: flip) { content, phase in
-//                    content
-//                        .scaleEffect(y: phase.yScale)
-//                } animation: { phase in
-//                        .linear(duration: phase.duration).delay(getFlipDelay(for: phase))
-//                }
-            .scaleEffect(x: 1, y: flip ? -1 : 1)
+                .scaleEffect(x: 1, y: shouldFlip ? -1 : 1)
 
             Text(letter.rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
                 .foregroundStyle(.white)
-                .phaseAnimator(LetterFlip.phases, trigger: flip) { content, phase in
+                .phaseAnimator(LetterFlip.phases, trigger: shouldFlip) { content, phase in
                     content
                         .scaleEffect(y: phase.yScale)
                 } animation: { phase in
@@ -42,56 +37,62 @@ struct SubmittedLetterView: View {
                 }
         }
         
-        // Flip animation on appear
-        // Float animation on success
-        .phaseAnimator(FloatAnimation.phases, trigger: float) { content, phase in
+        // Perform float animation when submitted word is target word
+        .phaseAnimator(FloatAnimation.phases, trigger: shouldFloat) { content, phase in
             content.offset(y: phase.yOffset)
         } animation: { phase in
-                .easeOut(duration: phase.duration).delay(getDelay(for: phase))
+            .easeOut(duration: phase.duration).delay(getFloatDelay(for: phase))
         }
         
-        // Flip letters and show status on appear
+        // Perform flip animation on appear, reveal letter status
         .onAppear {
-            if index == 0 {
-                bradleViewModel.pauseSubmit = true
-            }
             withAnimation(.linear(duration: 0.4).delay(0.4 * index)) {
-                flip = true
+                shouldFlip = true
             } completion: {
+                // Keyboard input is disabled while submission is being revealed
                 if index == 4 {
-                    bradleViewModel.pauseSubmit = false
+                    gameRunner.disableKeyboardInput = false
                 }
                 
-                if bradleViewModel.targetWordFound {
-                    float = true
+                // Trigger float animation is submitted word is target word
+                if gameRunner.targetWordFound {
+                    shouldFloat = true
                     if index == 4 {
-                        bradleViewModel.setVictoryMessage()
+                        gameRunner.setVictoryMessage()
                     }
                 }
             }
-            // Reveal status while frame is hidden during animation
+            // Change status color while frame is hidden during animation
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 + (0.4 * index)) {
                 color = status.color
+                showBorder = false
             }
         }
     }
 }
 
+//private extension View {
+//    func floatAnimation(trigger: Bool, delay: CGFloat) -> some View {
+//        self
+//            .phaseAnimator(FloatAnimation.phases, trigger: trigger) { content, phase in
+//                content.offset(y: phase.yOffset)
+//            } animation: { phase in
+//                    .easeOut(duration: phase.duration).delay(delay)
+//            }
+//    }
+//}
+
 extension SubmittedLetterView {
-    func getFlipDelay(for phase: FrameFlip) -> CGFloat {
-        return phase == .halfway ? 0.4 * index : 0
-    }
-    
     func getFlipDelay(for phase: LetterFlip) -> CGFloat {
         return phase == .halfway ? 0.4 * index : 0
     }
     
-    func getDelay(for phase: FloatAnimation) -> CGFloat {
+    func getFloatDelay(for phase: FloatAnimation) -> CGFloat {
         return phase == .peak ? phase.delay - 0.3 * index : 0
     }
 }
 
 #Preview {
     SubmittedLetterView(letter: .A, status: .correct, index: 0)
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }

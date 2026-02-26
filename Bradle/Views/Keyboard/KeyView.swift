@@ -11,23 +11,23 @@ struct KeyView: View {
     var key: KeyboardButton
     @State var color: Color = Color(UIColor.lightGray)
     
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
     
     public var body: some View {
         Button {
-            bradleViewModel.handlePress(from: key)
+            gameRunner.handlePress(from: key)
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 5)
                     .foregroundStyle(color)
                 
-                AnyView(key.icon)
+                key.icon
                     .foregroundStyle(.white)
                     .animation(.easeIn, value: key)
             }
         }
         .buttonStyle(.plain)
-        .onChange(of: bradleViewModel.keyboardManager.getButtonColor(for: key)) { _, newValue in
+        .onChange(of: gameRunner.keyboardManager.getButtonColor(for: key)) { _, newValue in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.color = newValue
             }
@@ -37,5 +37,5 @@ struct KeyView: View {
 
 #Preview {
     KeyView(key: KeyboardButton.A)
-       .environmentObject(BradleViewModel())
+       .environmentObject(GameRunner())
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CurrentAttemptView: View {
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
     
     public var body: some View {
         HStack(spacing: 0) {
@@ -23,6 +23,6 @@ struct CurrentAttemptView: View {
 
 #Preview {
     CurrentAttemptView()
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }
 

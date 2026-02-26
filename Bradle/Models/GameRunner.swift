@@ -9,7 +9,8 @@ import SwiftUI
 import Combine
 import UserNotifications
 
-class BradleViewModel: ObservableObject {
+class GameRunner: ObservableObject {
+    @AppStorage("hardMode") var hardModeEnabled: Bool = false
     @Published var location: AppLocation = .start
     @Published var fullScreenCover: FullScreenCover = .empty {
         didSet {
@@ -52,7 +53,6 @@ class BradleViewModel: ObservableObject {
     @Published var submittedAttempts: [SubmittedAttempt]
     @Published var currentAttempt: CurrentAttempt
     
-    
     @Published var gameComplete: Bool = false
     @Published var targetWordFound: Bool = false
     @Published var hideKeyboard: Bool = false
@@ -68,7 +68,7 @@ class BradleViewModel: ObservableObject {
     }
     
     // Is true while flip animation is running
-    var pauseSubmit: Bool = false
+    var disableKeyboardInput: Bool = false
     
     var keyboardManager: KeyboardManager
     let targetWord: [Letter]
@@ -79,11 +79,12 @@ class BradleViewModel: ObservableObject {
         self.submittedAttempts = [SubmittedAttempt]()
         self.currentAttempt = CurrentAttempt()
 
-        // Read words file
+        // Find words file
         guard let file = Bundle.main.url(forResource: "words", withExtension: "json") else {
             fatalError("Could not find words file.")
         }
         
+        // Read words from file, assign to words
         do {
             let data = try Data(contentsOf: file)
             try self.words = JSONDecoder().decode([String].self, from: data)
@@ -91,6 +92,7 @@ class BradleViewModel: ObservableObject {
             fatalError("An error occured. Could not decode words file.")
         }
         
+        // Assign target word to random word
         if let targetWord = words.randomElement() {
             print("Target Word: \(targetWord)")
             self.targetWord = Letter.formTargetWord(from: targetWord)
@@ -99,8 +101,15 @@ class BradleViewModel: ObservableObject {
         }
     }
     
+    // Performs action from keyboard button press
     public func handlePress(from key: KeyboardButton) {
-        if key == .enter && !pauseSubmit {
+        
+        // Do not allow input if in an animation
+        if disableKeyboardInput {
+            return
+        }
+        
+        if key == .enter {
             handleSubmit(for: currentAttempt.attempt)
         } else if key == .backspace {
             currentAttempt.backspace()
@@ -109,7 +118,10 @@ class BradleViewModel: ObservableObject {
         }
     }
     
+    // Process submitted word when "ENTER" keyboard button is tapped
     public func handleSubmit(for attempt: [Letter]) {
+        
+        // MARK: Validate submitted input
         
         // Ensure that the attempt is full
         if targetWord.contains(.empty) {
@@ -125,88 +137,74 @@ class BradleViewModel: ObservableObject {
             return
         }
         
+        // TODO: Add check for hard mode conformance
+        if hardModeEnabled {
+            // Evaluate
+        }
+        
+        // MARK: Evaluate valid submission
+        self.disableKeyboardInput = true
+        
         // Check if attempt is correct
         if attempt == targetWord {
             let submittedAttempt = SubmittedAttempt(attempt: attempt, statuses: Array(repeating: .correct, count: 5))
             submittedAttempts.append(submittedAttempt)
+            
             targetWordFound = true
-            self.fullScreenCover = .victory
+            fullScreenCover = .victory
             
             print("Game Complete.")
             return
         }
-                
-        var statusArray = Array(repeating: Status.notTried, count: 5)
+        
+        // Evalute submitted attempt if valid but not target
+        var statusArray = Array(repeating: Status.notIncluded, count: 5)
         for (index, letter) in attempt.enumerated() {
             if targetWord.contains(letter) {
+                
+                // if letter is in correct location
                 if targetWord[index] == letter {
                     statusArray[index] = .correct
                     keyboardManager.buttonStatus[letter] = .correct
+                    
+                // if word is included but in wrong spot
                 } else {
                     statusArray[index] = .included
                     keyboardManager.buttonStatus[letter] = .included
                 }
-                
+            
+                // if letter is not included
             } else {
-                statusArray[index] = .notIncluded
                 keyboardManager.buttonStatus[letter] = .notIncluded
             }
         }
-                
+        
+        //
+        
+        // MARK: - Advance to next turn
+        
+        // if player has more attempts left
         if currentAttemptIndex < 6 {
             currentAttemptIndex += 1
             numEmptyRows -= 1
             
+            // create submitted attempt attempt and
             let submittedAttempt = SubmittedAttempt(attempt: currentAttempt.attempt, statuses: statusArray)
             submittedAttempts.append(submittedAttempt)
+            
+            // set current attempt to empty
             currentAttempt = CurrentAttempt()
+            
+        // if out of attempts
         } else {
             alertMessage = AlertMessage.fail.message
             gameComplete = true
         }
     }
     
-    static func getWords() -> [String] {
-        guard let file = Bundle.main.url(forResource: "words", withExtension: "json") else {
-            fatalError("Could not find words file.")
-        }
-        
-        do {
-            let data = try Data(contentsOf: file)
-            return try JSONDecoder().decode([String].self, from: data)
-        } catch {
-            fatalError("An error occured. Could not decode words file.")
-        }
-    }
-    
+    // Sets alertMessage if game is won
     func setVictoryMessage() {
         let attempts = submittedAttempts.count
-        if attempts == 1 {
-            alertMessage = AlertMessage.victoryIn1.message
-        }
-        
-        else if attempts == 2 {
-            alertMessage = AlertMessage.victoryIn2.message
-        }
-        
-        else if attempts == 3 {
-            alertMessage = AlertMessage.victoryIn3.message
-        }
-        
-        else if attempts == 4 {
-            alertMessage = AlertMessage.victoryIn4.message
-        }
-        
-        else if attempts == 5 {
-            alertMessage = AlertMessage.victoryIn5.message
-        }
-        
-        else if attempts == 6 {
-            alertMessage = AlertMessage.victoryIn6.message
-        }
-        
-        else {
-            alertMessage = "Oops.."
-        }
+        alertMessage = AlertMessage.victoryMessages[attempts - 1]
     }
 }

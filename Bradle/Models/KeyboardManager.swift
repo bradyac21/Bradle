@@ -13,13 +13,13 @@ struct KeyboardManager {
     init() {
         buttonStatus = [Letter: Status]()
         for letter in Letter.allCases {
-            buttonStatus[letter] = .notTried
+            buttonStatus[letter] = .correct
         }
     }
     
     func getButtonColor(for key: KeyboardButton) -> Color {
         if [.enter, .backspace].contains(key) {
-            return Color(UIColor.lightGray)
+            return BradleColors.lightGray
         } else {
             if let letter = Letter(rawValue: key.rawValue) {
                 return buttonStatus[letter]?.color ?? .red

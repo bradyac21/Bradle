@@ -21,6 +21,10 @@ struct SubmittedAttemptView: View {
 }
 
 #Preview {
-    SubmittedAttemptView(submittedAttempt: SubmittedAttempt())
+    let attempt: [Letter] = [.B, .R, .A, .D, .Y]
+    let status: [Status] = [.included, .notIncluded, .notIncluded, .correct, .notIncluded]
+    
+    SubmittedAttemptView(submittedAttempt: SubmittedAttempt(attempt: attempt, statuses: status))
+        .environmentObject(GameRunner())
 }
 

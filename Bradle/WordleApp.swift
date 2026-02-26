@@ -9,12 +9,12 @@ import SwiftUI
 
 @main
 struct BradleApp: App {
-    @StateObject var bradleViewModel = BradleViewModel()
+    @StateObject var gameRunner = GameRunner()
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                switch bradleViewModel.location {
+                switch gameRunner.location {
                 case .start:
                     StartView()
                         .transition(.opacity)
@@ -24,20 +24,20 @@ struct BradleApp: App {
                 }
             }
             // Handles transition from StartView to GameView
-            .animation(.easeInOut, value: bradleViewModel.location)
-            .fullScreenCover(isPresented: $bradleViewModel.showFullScreenCover) {
-                if bradleViewModel.fullScreenCover == .victory {
-                    bradleViewModel.hideKeyboard = true
+            .animation(.easeInOut, value: gameRunner.location)
+            .fullScreenCover(isPresented: $gameRunner.showFullScreenCover) {
+                if gameRunner.fullScreenCover == .victory {
+                    gameRunner.hideKeyboard = true
                 }
             } content: {
-                bradleViewModel.fullScreenCover.screen
+                gameRunner.fullScreenCover.screen
             }
-            .sheet(isPresented: $bradleViewModel.showSheet) {
-                bradleViewModel.sheet.screen
+            .sheet(isPresented: $gameRunner.showSheet) {
+                gameRunner.sheet.screen
                     .presentationCornerRadius(12)
             }
         }
-        .environmentObject(bradleViewModel)
+        .environmentObject(gameRunner)
     }
 }
 

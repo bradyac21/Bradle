@@ -12,7 +12,7 @@ struct LogInSheet: View {
     @State var emailEntry: String = ""
     var body: some View {
         ZStack {
-            darkBackground.ignoresSafeArea()
+            BradleColors.dark.ignoresSafeArea()
             VStack {
                 ZStack {
                     HStack {
@@ -36,7 +36,7 @@ struct LogInSheet: View {
                 Divider()
                     .padding(.bottom, 25)
                     .frame(width: .infinity, height: 1)
-                    .background(lightBackground)
+                    .background(BradleColors.light)
                     .ignoresSafeArea()
                 Text("Log in or create an account")
                     .fontWeight(.semibold)
@@ -92,7 +92,7 @@ struct LogInSheet: View {
                     print("Continue with email tapped")
                 }, label: {
                     Text("Continue with email")
-                        .foregroundStyle(darkBackground)
+                        .foregroundStyle(BradleColors.dark)
                         .fontWeight(.semibold)
                         .font(.system(size: 12))
                         .padding(.horizontal, 126)

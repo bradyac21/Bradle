@@ -22,7 +22,7 @@ struct KeyboardView: View {
                         ForEach(row, id: \.self) { key in
                             KeyView(key: key)
                                 .padding(3)
-                                .frame(width: key.widthScale, height: geometry.size.width * 0.125)
+                                .frame(width: geometry.size.width * key.widthScale, height: geometry.size.width * 0.125)
                         }
                     }
                 }
@@ -33,5 +33,5 @@ struct KeyboardView: View {
 
 #Preview {
     KeyboardView()
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }

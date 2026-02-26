@@ -8,26 +8,19 @@
 import SwiftUI
 
 struct LetterView: View {
-    @State var letter: Letter = .empty {
-        didSet {
-            pop = true
-        }
-    }
-    @State var status: Status = .defaultStatus {
-        didSet {
-            print("status change to \(status)")
-            flip = true
-        }
-    }
+    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
+    
+    @State var letter: Letter = .empty
+    @State var status: Status = .defaultStatus
     @State var flip: Bool = false
     @State var pop: Bool = false
     var index: Int = 0
     
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
     
     public var body: some View {
         ZStack {
-            AnyView(status.background)
+            AnyView(status.letterBackground)
                 .phaseAnimator(Pop.phases, trigger: pop) { content, phase in
                     content
                         .scaleEffect(phase.scale)
@@ -38,7 +31,10 @@ struct LetterView: View {
                 .animation(.easeInOut(duration: 0.4), value: flip)
             Text(letter.rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
-                .foregroundStyle(.white)
+                .foregroundStyle(darkModeEnabled ? .white : BradleColors.lightModeBackground)
+        }
+        .onChange(of: letter) {
+            pop = true
         }
         .onAppear {
             pop.toggle()
@@ -48,5 +44,5 @@ struct LetterView: View {
 
 #Preview {
     LetterView(letter: .A, index: 0)
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }

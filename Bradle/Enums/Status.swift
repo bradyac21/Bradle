@@ -13,39 +13,40 @@ enum Status {
     case correct
     case action
     case defaultStatus
-    case typing
+    case attemptInProgress
     
     public var color: Color {
         switch self {
             
         case .notTried, .action:
-            return Color(UIColor.lightGray)
+            return BradleColors.lightGray
         case .defaultStatus:
-            return darkBackground
-        case .notIncluded, .typing:
-            return Color(UIColor.darkGray)
+            return BradleColors.dark
+        case .notIncluded, .attemptInProgress:
+            return BradleColors.darkGray
         case .included:
-            return .yellow
+            return BradleColors.yellow
         case .correct:
-            return .green
+            return BradleColors.green
         }
     }
     
-    public var background: any View {
+    public var letterBackground: any View {
         switch self {
         case .correct, .included, .notIncluded:
             return RoundedRectangle(cornerRadius: 5)
+                .fill(self.color)
                 .aspectRatio(1.0, contentMode: .fit)
-                .foregroundStyle(self.color)
-        case .typing:
+        case .attemptInProgress:
             return RoundedRectangle(cornerRadius: 5)
+                .fill(.clear)
                 .aspectRatio(1.0, contentMode: .fit)
-                .border(Color(UIColor.lightGray))
+                .border(BradleColors.lightGray, width: 2)
         default:
             return RoundedRectangle(cornerRadius: 5)
+                .fill(.clear)
                 .aspectRatio(1.0, contentMode: .fit)
-                .foregroundStyle(darkBackground)
-                .border(Color(UIColor.darkGray))
+                .border(BradleColors.lightModeEmptyBorder, width: 2)
         }
     }
 }

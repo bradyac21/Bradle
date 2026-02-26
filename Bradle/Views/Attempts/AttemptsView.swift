@@ -9,24 +9,24 @@ import SwiftUI
 
 struct AttemptsView: View {
     
-    @EnvironmentObject var bradleViewModel: BradleViewModel
+    @EnvironmentObject var gameRunner: GameRunner
     
     public var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
                 
                 // Rows for submitted attempts
-                ForEach(bradleViewModel.submittedAttempts, id: \.attempt.self) { attempt in
+                ForEach(gameRunner.submittedAttempts, id: \.attempt.self) { attempt in
                     SubmittedAttemptView(submittedAttempt: attempt)
                         .frame(height: geometry.size.width * (1/5))
                     
                 }
                 
                 // Row for current attempt
-                if !bradleViewModel.targetWordFound {
+                if !gameRunner.targetWordFound {
                     CurrentAttemptView()
                         .frame(height: geometry.size.width * (1/5))
-                        .phaseAnimator(Shake.phases, trigger: bradleViewModel.shouldShake) { content, phase in
+                        .phaseAnimator(Shake.phases, trigger: gameRunner.shouldShake) { content, phase in
                             content
                                 .offset(x: phase.xOffset)
                         } animation: { phase in
@@ -35,7 +35,7 @@ struct AttemptsView: View {
                 }
                 
                 // Remaining empty rows
-                ForEach(0..<bradleViewModel.numEmptyRows, id: \.self) { _ in
+                ForEach(0..<gameRunner.numEmptyRows, id: \.self) { _ in
                     EmptyAttemptView()
                         .frame(height: geometry.size.width * (1/5))
                 }
@@ -48,5 +48,5 @@ struct AttemptsView: View {
 // MARK: - Functions
 #Preview {
     AttemptsView()
-        .environmentObject(BradleViewModel())
+        .environmentObject(GameRunner())
 }
