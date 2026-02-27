@@ -82,13 +82,13 @@ struct BradleButtonLabel: View {
     
     var body: some View {
         Text(label)
-            .foregroundStyle(fill ? .white : BradleColors.dark)
+            .foregroundStyle(fill ? .white : BradleColors.introDark)
             .frame(width: 150, height: 20)
             .padding(.vertical, 12.5)
             .background {
                 Capsule()
                     .stroke(BradleColors.dark, lineWidth: 2)
-                    .fill(fill ? BradleColors.dark : BradleColors.light)
+                    .fill(fill ? BradleColors.introDark : BradleColors.light)
             }
             .onTapGesture {
                 action()

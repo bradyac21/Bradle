@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct KeyboardManager {
+    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     var buttonStatus: [Letter: Status]
     
     init() {
@@ -19,10 +20,14 @@ struct KeyboardManager {
     
     func getButtonColor(for key: KeyboardButton) -> Color {
         if [.enter, .backspace].contains(key) {
-            return BradleColors.lightGray
+            return BradleColors.defaultKeyboardColor
         } else {
             if let letter = Letter(rawValue: key.rawValue) {
-                return buttonStatus[letter]?.color ?? .red
+                if darkModeEnabled {
+                    return buttonStatus[letter]?.darkModeColor ?? .red
+                } else {
+                    return buttonStatus[letter]?.lightModeColor ?? .red
+                }
             }
         }
         

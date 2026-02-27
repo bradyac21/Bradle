@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct CurrentLetterView: View {
+    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
+    
     var index: Int
     @State var shouldPop: Bool = false
-    @State var borderColor: Color = BradleColors.lightGray
+    @State var borderColor: Color = .clear
+    @State var status: Status = .empty
     
     @EnvironmentObject var gameRunner: GameRunner
     
@@ -19,19 +22,20 @@ struct CurrentLetterView: View {
             RoundedRectangle(cornerRadius: 1)
                 .aspectRatio(1.0, contentMode: .fit)
                 .foregroundStyle(.clear)
-                .border(borderColor, width: 2)
+                .border(darkModeEnabled ? status.darkModeBorderColor : status.lightModeBorderColor)
                 .popAnimation(trigger: shouldPop)
             
             Text(gameRunner.currentAttempt.attempt[index].rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
-                .foregroundStyle(.white)
+                .foregroundStyle(darkModeEnabled ? .white : .black)
+                .padding(.bottom, 5)
         }
         .onChange(of: gameRunner.currentAttempt.attempt[index]) { _, newValue in
             if newValue != .empty {
                 shouldPop.toggle()
-                borderColor = BradleColors.lightGray
+                status = .attemptInProgress
             } else {
-                borderColor = BradleColors.darkGray
+                status = .empty
             }
         }
     }

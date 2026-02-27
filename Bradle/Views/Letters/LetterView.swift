@@ -11,7 +11,7 @@ struct LetterView: View {
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     
     @State var letter: Letter = .empty
-    @State var status: Status = .defaultStatus
+    @State var status: Status = .empty
     @State var flip: Bool = false
     @State var pop: Bool = false
     var index: Int = 0
@@ -20,7 +20,10 @@ struct LetterView: View {
     
     public var body: some View {
         ZStack {
-            AnyView(status.letterBackground)
+            RoundedRectangle(cornerRadius: 5)
+                .fill(darkModeEnabled ? status.darkModeColor : status.lightModeColor)
+                .border(darkModeEnabled ? status.darkModeBorderColor : status.lightModeBorderColor)
+                .aspectRatio(1.0, contentMode: .fit)
                 .phaseAnimator(Pop.phases, trigger: pop) { content, phase in
                     content
                         .scaleEffect(phase.scale)
@@ -31,7 +34,7 @@ struct LetterView: View {
                 .animation(.easeInOut(duration: 0.4), value: flip)
             Text(letter.rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
-                .foregroundStyle(darkModeEnabled ? .white : BradleColors.lightModeBackground)
+                .foregroundStyle(darkModeEnabled ? .white : .black)
         }
         .onChange(of: letter) {
             pop = true

@@ -12,7 +12,7 @@ struct LogInSheet: View {
     @State var emailEntry: String = ""
     var body: some View {
         ZStack {
-            BradleColors.dark.ignoresSafeArea()
+            BradleColors.darkModeBackground.ignoresSafeArea()
             VStack {
                 ZStack {
                     HStack {

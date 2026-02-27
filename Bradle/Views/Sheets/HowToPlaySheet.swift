@@ -10,6 +10,7 @@ import SwiftUI
 struct HowToPlaySheet: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
+    
     var body: some View {
         VStack {
             
@@ -45,7 +46,7 @@ struct HowToPlaySheet: View {
                     .font(.custom("NYTFranklin-Bold", size: 15))
                     .padding(.top, 5)
                 
-                // Wordy
+                // WORDY
                 ExampleWord(
                     word: "WORDY",
                     status: .correct,
@@ -107,7 +108,7 @@ struct HowToPlaySheet: View {
         .padding(.top, 20)
         .foregroundStyle(darkModeEnabled ? .white : BradleColors.dark)
         .background {
-            darkModeEnabled ? BradleColors.dark : BradleColors.light
+            darkModeEnabled ? BradleColors.darkModeBackground : BradleColors.lightModeBackground
         }
     }
 }
@@ -116,7 +117,7 @@ struct HowToPlaySheet: View {
     HowToPlaySheet()
 }
 
-struct BulletPoint: View {
+private struct BulletPoint: View {
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     var text: String
     
@@ -126,12 +127,12 @@ struct BulletPoint: View {
                 .font(.custom("NYTFranklinCW-Medium", size: 15))
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .foregroundStyle(darkModeEnabled ? .white : BradleColors.dark)
+        .foregroundStyle(darkModeEnabled ? .white : .black)
         .padding(.top, 5)
     }
 }
 
-struct ExampleWord: View {
+private struct ExampleWord: View {
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     var attempt: [Letter]
     var status: Status
@@ -157,6 +158,7 @@ struct ExampleWord: View {
                 Text(attempt.toString()[index].description)
                     .font(.custom("NYTFranklin-Bold", size: 15))
                     .padding(.horizontal, 0)
+                    .padding(.bottom, 2)
                 Text(" \(message)")
                     .font(.custom("NYTFranklinCW-Medium", size: 15))
                     .padding(.horizontal, 0)

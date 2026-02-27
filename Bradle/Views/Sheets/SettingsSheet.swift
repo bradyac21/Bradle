@@ -75,7 +75,7 @@ struct SettingsSheet: View {
 
                 Spacer()
             }
-            .foregroundStyle(darkModeEnabled ? .white : BradleColors.dark)
+            .foregroundStyle(darkModeEnabled ? .white : .black)
         }
     }
 }

@@ -44,7 +44,7 @@ struct GameView: View {
                     }
             }
         }
-        .background(darkModeEnabled ? BradleColors.dark : BradleColors.lightModeBackground)
+        .background(darkModeEnabled ? BradleColors.darkModeBackground : BradleColors.lightModeBackground)
         .environmentObject(gameRunner)
     }
 }

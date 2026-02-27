@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct KeyView: View {
+    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     var key: KeyboardButton
-    @State var color: Color = Color(UIColor.lightGray)
+    @State var color: Color = .clear
+    @State var status: Status = .action
     
     @EnvironmentObject var gameRunner: GameRunner
     
@@ -19,12 +21,15 @@ struct KeyView: View {
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 5)
-                    .foregroundStyle(color)
+                    .foregroundStyle(darkModeEnabled ? status.darkModeColor : status.lightModeColor)
                 
                 key.icon
-                    .foregroundStyle(.white)
+                    .foregroundStyle(darkModeEnabled ? .white : .black)
                     .animation(.easeIn, value: key)
             }
+        }
+        .onAppear {
+            color = darkModeEnabled ? BradleColors.darkModeKeyboardFrameColor : BradleColors.lightModeKeyboardFrameColor
         }
         .buttonStyle(.plain)
         .onChange(of: gameRunner.keyboardManager.getButtonColor(for: key)) { _, newValue in

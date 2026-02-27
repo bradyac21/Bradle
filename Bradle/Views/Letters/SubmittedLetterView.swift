@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct SubmittedLetterView: View {
+    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
+    
     @State var shouldFlip: Bool = false
     @State var shouldFloat: Bool = false
     @State var color: Color = .clear
-    @State var showBorder: Bool = true
+    @State var borderColor: Color = .clear
     var letter: Letter
     var status: Status
     var index: CGFloat
@@ -22,13 +24,14 @@ struct SubmittedLetterView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 1)
                 .aspectRatio(1.0, contentMode: .fit)
-                .border(showBorder ? BradleColors.darkGray : .clear)
+                .border(borderColor)
                 .foregroundStyle(color)
                 .scaleEffect(x: 1, y: shouldFlip ? -1 : 1)
 
             Text(letter.rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
                 .foregroundStyle(.white)
+                .padding(.bottom, 5)
                 .phaseAnimator(LetterFlip.phases, trigger: shouldFlip) { content, phase in
                     content
                         .scaleEffect(y: phase.yScale)
@@ -46,6 +49,8 @@ struct SubmittedLetterView: View {
         
         // Perform flip animation on appear, reveal letter status
         .onAppear {
+            // TODO: Get light mode filled border color
+            borderColor = darkModeEnabled ? status.darkModeBorderColor : status.lightModeBorderColor
             withAnimation(.linear(duration: 0.4).delay(0.4 * index)) {
                 shouldFlip = true
             } completion: {
@@ -64,8 +69,8 @@ struct SubmittedLetterView: View {
             }
             // Change status color while frame is hidden during animation
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 + (0.4 * index)) {
-                color = status.color
-                showBorder = false
+                color = darkModeEnabled ? status.darkModeColor : status.lightModeColor
+                borderColor = darkModeEnabled ? status.darkModeBorderColor : status.lightModeBorderColor
             }
         }
     }
