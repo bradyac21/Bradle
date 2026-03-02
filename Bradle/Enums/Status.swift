@@ -15,22 +15,6 @@ enum Status {
     case empty
     case attemptInProgress
     
-//    public var color: Color {
-//        switch self {
-//            
-//        case .notTried, .action:
-//            return BradleColors.defaultKeyboardColor
-//        case .empty, .attemptInProgress:
-//            return .clear
-//        case .notIncluded:
-//            return BradleColors.darkGray
-//        case .included:
-//            return BradleColors.yellow
-//        case .correct:
-//            return BradleColors.green
-//        }
-//    }
-    
     public var darkModeColor: Color {
         switch self {
             
@@ -110,24 +94,4 @@ enum Status {
             .red
         }
     }
-    
-//    public var letterBackground: any View {
-//        switch self {
-//        case .correct, .included, .notIncluded:
-//            return RoundedRectangle(cornerRadius: 5)
-//                .fill(self.color)
-//                .aspectRatio(1.0, contentMode: .fit)
-//        case .attemptInProgress:
-//            return RoundedRectangle(cornerRadius: 5)
-//                .fill(.clear)
-//                .aspectRatio(1.0, contentMode: .fit)
-//                .border(BradleColors.lightGray, width: 2)
-//        default:
-//            return RoundedRectangle(cornerRadius: 5)
-//                .fill(.clear)
-//                .aspectRatio(1.0, contentMode: .fit)
-//                .border(BradleColors.lightModeEmptyBorder, width: 2)
-//        }
-//    }
-    
 }

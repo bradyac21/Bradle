@@ -8,9 +8,37 @@
 struct SubmittedAttempt: Attempt, Hashable {
     var attempt: [Letter]
     var statuses: [Status]
+    var isTarget: Bool
     
-    init(attempt: [Letter], statuses: [Status]) {
+    /// Default init for testing and previews
+    init() {
+        self.attempt = [.R, .O, .G, .U, .E]
+        self.statuses = [.correct, .included, .notIncluded, .notIncluded, .included]
+        self.isTarget = true
+    }
+    
+    init(attempt: [Letter], statuses: [Status], isTarget: Bool = false) {
         self.attempt = attempt
         self.statuses = statuses
+        self.isTarget = isTarget
+    }
+}
+
+struct SubmittedAttempt2: Attempt, Hashable {
+    var attempt: [Letter]
+    var statuses: [SubmittedAttemptLetterStatus]
+    var isTarget: Bool
+    
+    /// Default init for testing and previews
+    init() {
+        self.attempt = [.R, .O, .G, .U, .E]
+        self.statuses = [.correct, .included, .notIncluded, .notIncluded, .included]
+        self.isTarget = true
+    }
+    
+    init(attempt: [Letter], statuses: [SubmittedAttemptLetterStatus], isTarget: Bool = false) {
+        self.attempt = attempt
+        self.statuses = statuses
+        self.isTarget = isTarget
     }
 }

@@ -30,9 +30,6 @@ class BradleColors {
     // border for a filled inProgress letter view in dark mode
     static let darkModeFilledBorder = Color(red: 86/255, green: 87/255, blue: 88/255)
     
-    static let darkGray = Color(red: 120/255, green: 124/255, blue: 126/255)
-    static let lightGray = Color(UIColor.lightGray)
-    
     // dark mode not included color
     static let darkModeNotIncluded = Color(red: 58/255, green: 58/255, blue: 60/255)
     
@@ -44,9 +41,7 @@ class BradleColors {
     
     // Used for a letter that is included in the wrong spot
     static let yellow = Color(red: 201/255, green: 180/255, blue: 88/255)
-    
-    static let defaultKeyboardColor = Color(red: 129/255, green: 131/255, blue: 132/255)
-    
+        
     // button colors on intro screen
     static let introDark = Color(red: 18/255, green: 19/255, blue: 18/255)
     
@@ -59,5 +54,7 @@ class BradleColors {
     // frame color for keyboard in dark mode
     static let darkModeKeyboardFrameColor = Color(red: 129/255, green: 131/255, blue: 132/255)
     
+    static let highContrastCorrect = Color(red: 245/255, green: 121/255, blue: 58/255)
     
+    static let highContrastIncluded = Color(red: 133/255, green: 192/255, blue: 249/255)
 }

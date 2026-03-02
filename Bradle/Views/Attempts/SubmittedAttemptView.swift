@@ -10,6 +10,10 @@ import SwiftUI
 struct SubmittedAttemptView: View {
     var submittedAttempt: SubmittedAttempt
     
+    init(for attempt: SubmittedAttempt) {
+        self.submittedAttempt = attempt
+    }
+    
     public var body: some View {
         HStack(spacing: 0) {
             ForEach(Array(submittedAttempt.attempt.enumerated()), id: \.offset) { index, letter in
@@ -21,10 +25,7 @@ struct SubmittedAttemptView: View {
 }
 
 #Preview {
-    let attempt: [Letter] = [.B, .R, .A, .D, .Y]
-    let status: [Status] = [.included, .notIncluded, .notIncluded, .correct, .notIncluded]
-    
-    SubmittedAttemptView(submittedAttempt: SubmittedAttempt(attempt: attempt, statuses: status))
+    SubmittedAttemptView(for: SubmittedAttempt())
         .environmentObject(GameRunner())
 }
 

@@ -1,5 +1,5 @@
 //
-//  LetterFlip.swift
+//  FlipAnimation.swift
 //  Bradle
 //
 //  Created by Brady Carden on 2/14/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum LetterFlip: CaseIterable {
+enum FlipAnimation: CaseIterable {
     case initial
     case halfway
     case end
@@ -20,7 +20,12 @@ enum LetterFlip: CaseIterable {
         }
     }
     
-    static var phases: [LetterFlip] {
-        return LetterFlip.allCases
+    /// Total animation time for Flip Animation
+    static var totalDuration: CGFloat {
+        return 2
+    }
+    
+    static var phases: [FlipAnimation] {
+        return FlipAnimation.allCases
     }
 }

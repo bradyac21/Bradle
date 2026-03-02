@@ -41,7 +41,7 @@ struct CurrentLetterView: View {
     }
 }
 
-private extension View {
+public extension View {
     func popAnimation(trigger: Bool) -> some View {
         self
             .phaseAnimator(Pop.phases, trigger: trigger) { content, phase in

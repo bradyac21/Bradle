@@ -11,19 +11,18 @@ struct SettingsSheet: View {
     @Environment(\.dismiss) var dismiss
     
     @AppStorage("hardMode") var hardMode: Bool = false
-    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
-    @AppStorage("highContrastMode") var highContrastMode: Bool = false
+//    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
+//    @AppStorage("highContrastMode") var highContrastMode: Bool = false
     @AppStorage("softwareKeyboardOnly") var softwareKeyboardOnly: Bool = false
     
+    @Environment(ColorManager.self) var colorManager: ColorManager
+    
     var body: some View {
+        @Bindable var colorManager = colorManager
         ZStack {
             
             // Background color
-            if darkModeEnabled {
-                BradleColors.dark.ignoresSafeArea()
-            } else {
-                BradleColors.light.ignoresSafeArea()
-            }
+            colorManager.defaultBackground.ignoresSafeArea()
             
             VStack {
                 ZStack {
@@ -55,13 +54,13 @@ struct SettingsSheet: View {
                     ToggleRow(
                         title: "Dark Theme",
                         numLines: 0,
-                        value: $darkModeEnabled
+                        value: $colorManager.darkModeEnabled
                     )
                     
                     ToggleRow(
                         title: "High Contrast Mode",
                         description: "Contrast and colorblindness improvements",
-                        value: $highContrastMode
+                        value: $colorManager.highContrastEnabled
                     )
                     
                     ToggleRow(
@@ -75,7 +74,8 @@ struct SettingsSheet: View {
 
                 Spacer()
             }
-            .foregroundStyle(darkModeEnabled ? .white : .black)
+//            .foregroundStyle(darkModeEnabled ? .white : .black)
+            .foregroundStyle(colorManager.textColor)
         }
     }
 }
@@ -87,6 +87,7 @@ struct SettingsSheet: View {
     .sheet(isPresented: .constant(true)) {
         SettingsSheet()
             .presentationDetents([.medium])
+            .environment(ColorManager())
     }
 }
 
@@ -95,7 +96,8 @@ struct ToggleRow: View {
     var description: String? = nil
     var numLines: Int = 1
     @Binding var value: Bool
-    var action: (() -> ())?
+
+    @Environment(ColorManager.self) var colorManager
     
     var body: some View {
         VStack {
@@ -117,9 +119,10 @@ struct ToggleRow: View {
                 }
                 Toggle(isOn: $value) {
                 }
+                .tint(colorManager.correctBackground)
             }
             Divider()
-                .background(Color(UIColor.lightGray))
+                .background(BradleColors.darkModeNotIncluded)
         }
         .containerRelativeFrame(.vertical) { height, _ in
             height * (0.125 + (CGFloat(numLines) * 0.05))

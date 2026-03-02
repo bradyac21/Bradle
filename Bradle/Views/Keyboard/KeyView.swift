@@ -10,7 +10,6 @@ import SwiftUI
 struct KeyView: View {
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     var key: KeyboardButton
-    @State var color: Color = .clear
     @State var status: Status = .action
     
     @EnvironmentObject var gameRunner: GameRunner
@@ -28,13 +27,10 @@ struct KeyView: View {
                     .animation(.easeIn, value: key)
             }
         }
-        .onAppear {
-            color = darkModeEnabled ? BradleColors.darkModeKeyboardFrameColor : BradleColors.lightModeKeyboardFrameColor
-        }
         .buttonStyle(.plain)
-        .onChange(of: gameRunner.keyboardManager.getButtonColor(for: key)) { _, newValue in
+        .onChange(of: gameRunner.keyboardManager.getButtonStatus(for: key)) { _, newStatus in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.color = newValue
+                self.status = newStatus
             }
         }
     }

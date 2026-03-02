@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct BradleApp: App {
     @StateObject var gameRunner = GameRunner()
+    @State var colorManager = ColorManager()
     
     var body: some Scene {
         WindowGroup {
@@ -36,8 +37,14 @@ struct BradleApp: App {
                 gameRunner.sheet.screen
                     .presentationCornerRadius(12)
             }
+            #if DEBUG
+            .onTapGesture(count: 3) {
+                gameRunner.fullScreenCover = .testing
+            }
+            #endif
         }
         .environmentObject(gameRunner)
+        .environment(colorManager)
     }
 }
 

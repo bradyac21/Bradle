@@ -135,22 +135,25 @@ private struct BulletPoint: View {
 private struct ExampleWord: View {
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     var attempt: [Letter]
-    var status: Status
+    var statuses: [Status]
     var index: Int
     var message: String
     
     init(word: String, status: Status, index: Int, message: String) {
         self.attempt = Letter.formTargetWord(from: word)
-        self.status = status
         self.index = index
         self.message = message
+        
+        // Form a status array, insert the unique at the given index
+        self.statuses = Array(repeating: .attemptInProgress, count: 4)
+        self.statuses.insert(status, at: index)
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 ForEach(Array(attempt.enumerated()), id: \.offset) { idx, letter in
-                    LetterView(letter: letter, status: idx == index ? status : .attemptInProgress)
+                    LetterView(letter: letter, status: statuses[idx])
                 }
             }
             HStack(spacing: 0) {

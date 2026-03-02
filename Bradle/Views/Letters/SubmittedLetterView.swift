@@ -19,29 +19,30 @@ struct SubmittedLetterView: View {
     var index: CGFloat
     
     @EnvironmentObject var gameRunner: GameRunner
+    @Environment(ColorManager.self) var colorManager
     
     public var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 1)
                 .aspectRatio(1.0, contentMode: .fit)
-                .border(borderColor)
+                .border(colorManager.borderColor(for: status))
                 .foregroundStyle(color)
-                .scaleEffect(x: 1, y: shouldFlip ? -1 : 1)
 
             Text(letter.rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
                 .foregroundStyle(.white)
                 .padding(.bottom, 5)
-                .phaseAnimator(LetterFlip.phases, trigger: shouldFlip) { content, phase in
-                    content
-                        .scaleEffect(y: phase.yScale)
-                } animation: { phase in
-                        .linear(duration: 0.2).delay(getFlipDelay(for: phase))
-                }
+        }
+        
+        .phaseAnimator(FlipAnimation.phases, trigger: shouldFlip) { content, phase in
+            content
+                .scaleEffect(y: phase.yScale)
+        } animation: { phase in
+                .linear(duration: 0.2).delay(getFlipDelay(for: phase))
         }
         
         // Perform float animation when submitted word is target word
-        .phaseAnimator(FloatAnimation.phases, trigger: shouldFloat) { content, phase in
+        .phaseAnimator(FloatAnimation.phases, trigger: gameRunner.targetWordFound) { content, phase in
             content.offset(y: phase.yOffset)
         } animation: { phase in
             .easeOut(duration: phase.duration).delay(getFloatDelay(for: phase))
@@ -49,8 +50,8 @@ struct SubmittedLetterView: View {
         
         // Perform flip animation on appear, reveal letter status
         .onAppear {
-            // TODO: Get light mode filled border color
-            borderColor = darkModeEnabled ? status.darkModeBorderColor : status.lightModeBorderColor
+            // TODO: Might need to set up a ColorManager
+//            borderColor = darkModeEnabled ? BradleColors.darkModeFilledBorder: BradleColors.lightModeFilledBorder
             withAnimation(.linear(duration: 0.4).delay(0.4 * index)) {
                 shouldFlip = true
             } completion: {
@@ -88,7 +89,7 @@ struct SubmittedLetterView: View {
 //}
 
 extension SubmittedLetterView {
-    func getFlipDelay(for phase: LetterFlip) -> CGFloat {
+    func getFlipDelay(for phase: FlipAnimation) -> CGFloat {
         return phase == .halfway ? 0.4 * index : 0
     }
     

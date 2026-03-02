@@ -18,9 +18,23 @@ struct KeyboardManager {
         }
     }
     
+    func getButtonStatus(for key: KeyboardButton) -> Status {
+        if key == .enter || key == .backspace {
+            return .action
+        } else {
+            if let letter = Letter(rawValue: key.rawValue), let status = buttonStatus[letter] {
+                return status
+            }
+        }
+        
+        // Bad
+        return .empty
+    }
+    
+    
     func getButtonColor(for key: KeyboardButton) -> Color {
         if [.enter, .backspace].contains(key) {
-            return BradleColors.defaultKeyboardColor
+            return darkModeEnabled ? BradleColors.darkModeKeyboardFrameColor : BradleColors.lightModeKeyboardFrameColor
         } else {
             if let letter = Letter(rawValue: key.rawValue) {
                 if darkModeEnabled {

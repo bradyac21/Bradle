@@ -17,7 +17,7 @@ struct AttemptsView: View {
                 
                 // Rows for submitted attempts
                 ForEach(gameRunner.submittedAttempts, id: \.attempt.self) { attempt in
-                    SubmittedAttemptView(submittedAttempt: attempt)
+                    SubmittedAttemptView(for: attempt)
                         .frame(height: geometry.size.width * (1/5))
                     
                 }

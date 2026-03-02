@@ -9,6 +9,8 @@ import SwiftUI
 
 struct VictoryScreen: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var gameRunner: GameRunner
+    
     var body: some View {
         ZStack {
             BradleColors.dark.ignoresSafeArea()
@@ -28,22 +30,7 @@ struct VictoryScreen: View {
                 Spacer()
                 
                 // Star thing
-                ZStack {
-                    RoundedRectangle(cornerRadius: 5)
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .frame(width: 80)
-                        .foregroundStyle(.green)
-                        .opacity(0.5)
-                    RoundedRectangle(cornerRadius: 0)
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .frame(width: 50)
-                        .foregroundStyle(.green)
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .foregroundStyle(.white)
-                        .frame(width: 40)
-                }
+                StarThing()
                 
                 // Congratulations
                 Text("Congratulations!")
@@ -116,9 +103,16 @@ struct VictoryScreen: View {
                 Spacer()
             }
         }
+        .onAppear {
+            Task {
+                try await Task.sleep(nanoseconds: 1_000_000_000)
+                gameRunner.hideKeyboard = true
+            }
+        }
     }
 }
 
 #Preview {
     VictoryScreen()
+        .environmentObject(GameRunner())
 }

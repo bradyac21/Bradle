@@ -14,14 +14,25 @@ enum AppLocation {
 
 enum FullScreenCover {
     case victory
+    case results
     case empty
+    
+    #if DEBUG
+    case testing
+    #endif
     
     var screen: some View {
         switch self {
-            case .victory:
-                AnyView(VictoryScreen())
-            case .empty:
-                AnyView(EmptyView())
+        case .victory:
+            AnyView(VictoryScreen())
+        case .results:
+            AnyView(ResultsView())
+        case .empty:
+            AnyView(EmptyView())
+        #if DEBUG
+        case .testing:
+            AnyView(DevelopingView())
+        #endif
         }
     }
 }

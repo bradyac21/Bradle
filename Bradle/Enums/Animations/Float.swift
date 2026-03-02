@@ -35,6 +35,7 @@ enum FloatAnimation: CaseIterable {
         case .end: 0
         }
     }
+
     
     static var phases: [FloatAnimation] {
         FloatAnimation.allCases

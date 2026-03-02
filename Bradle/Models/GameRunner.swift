@@ -14,35 +14,47 @@ class GameRunner: ObservableObject {
     @Published var location: AppLocation = .start
     @Published var fullScreenCover: FullScreenCover = .empty {
         didSet {
+            
+            /// Need to wait for animations before showing victory screen
             if fullScreenCover == .victory {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                     self.showFullScreenCover = true
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    self.hideKeyboard = true
-                }
+                
+            // When fullScreenCover is assigned, trigger showing the sheet
             } else if fullScreenCover != .empty {
                 showFullScreenCover = true
             }
         }
     }
+    
+    /// Whether or not the full screen cover should be shown
     @Published var showFullScreenCover: Bool = false {
         didSet {
+            
+            // Clear full screen cover if dismissed
             if !showFullScreenCover {
                 fullScreenCover = .empty
             }
         }
     }
     
+    /// Stores the sheet to be shown
     @Published var sheet: BradleSheet = .empty {
         didSet {
+            
+            // trigger showing sheet once sheet has a value
             if sheet != .empty {
                 showSheet = true
             }
         }
     }
+    
+    /// Whether or not the sheet should be shown
     @Published var showSheet: Bool = false {
         didSet {
+            
+            // Clear sheet if dismissed
             if !showSheet {
                 sheet = .empty
             }
@@ -147,7 +159,7 @@ class GameRunner: ObservableObject {
         
         // Check if attempt is correct
         if attempt == targetWord {
-            let submittedAttempt = SubmittedAttempt(attempt: attempt, statuses: Array(repeating: .correct, count: 5))
+            let submittedAttempt = SubmittedAttempt(attempt: attempt, statuses: Array(repeating: .correct, count: 5), isTarget: true)
             submittedAttempts.append(submittedAttempt)
             
             targetWordFound = true
@@ -206,5 +218,13 @@ class GameRunner: ObservableObject {
     func setVictoryMessage() {
         let attempts = submittedAttempts.count
         alertMessage = AlertMessage.victoryMessages[attempts - 1]
+    }
+    
+    func enableKeyboard() {
+        self.disableKeyboardInput = false
+    }
+    
+    func disableKeyboard() {
+        self.disableKeyboardInput = true
     }
 }

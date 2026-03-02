@@ -12,7 +12,7 @@ struct StartView: View {
     
     var body: some View {
         ZStack {
-            BradleColors.light.ignoresSafeArea()
+            BradleColors.lightModeBackground.ignoresSafeArea()
             VStack {
                 Spacer()
                 // Bradle logo
@@ -36,17 +36,17 @@ struct StartView: View {
                 
                 
                 // Play button
-                BradleButtonLabel("Play", fill: true) {
+                BradleButton("Play", fill: true) {
                     gameRunner.location = .game
                 }
                 
                 // Log in
-                BradleButtonLabel("Log in") {
+                BradleButton("Log in") {
                     gameRunner.sheet = .login
                 }
                 
                 // Subscribe
-                BradleButtonLabel("Subscribe") {
+                BradleButton("Subscribe") {
                     print("Subscribe tapped")
                 }
                 
@@ -69,7 +69,7 @@ struct StartView: View {
         .environmentObject(GameRunner())
 }
 
-struct BradleButtonLabel: View {
+struct BradleButton: View {
     var label: String
     var fill: Bool = false
     var action: () -> Void
@@ -88,7 +88,7 @@ struct BradleButtonLabel: View {
             .background {
                 Capsule()
                     .stroke(BradleColors.dark, lineWidth: 2)
-                    .fill(fill ? BradleColors.introDark : BradleColors.light)
+                    .fill(fill ? BradleColors.introDark : BradleColors.lightModeBackground)
             }
             .onTapGesture {
                 action()

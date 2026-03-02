@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct PostgameButtons: View {
+    
+    @EnvironmentObject var gameRunner: GameRunner
+    
     var body: some View {
         VStack {
             Spacer()
             Button(action: {
-                print("See results tapped")
+                gameRunner.fullScreenCover = .results
             }, label: {
                 Text("See results")
                     .foregroundStyle(.white)
