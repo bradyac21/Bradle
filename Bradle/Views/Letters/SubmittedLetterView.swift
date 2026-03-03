@@ -42,7 +42,7 @@ struct SubmittedLetterView: View {
         }
         
         // Perform float animation when submitted word is target word
-        .phaseAnimator(FloatAnimation.phases, trigger: gameRunner.targetWordFound) { content, phase in
+        .phaseAnimator(FloatAnimation.phases, trigger: shouldFloat) { content, phase in
             content.offset(y: phase.yOffset)
         } animation: { phase in
             .easeOut(duration: phase.duration).delay(getFloatDelay(for: phase))
@@ -60,9 +60,10 @@ struct SubmittedLetterView: View {
                     gameRunner.disableKeyboardInput = false
                 }
                 
-                // Trigger float animation is submitted word is target word
+                // Trigger float animation if submitted word is target word
                 if gameRunner.targetWordFound {
                     shouldFloat = true
+                    
                     if index == 4 {
                         gameRunner.setVictoryMessage()
                     }
@@ -70,6 +71,8 @@ struct SubmittedLetterView: View {
             }
             // Change status color while frame is hidden during animation
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 + (0.4 * index)) {
+                // 0.2 0.6 1.0 1.4 1.8
+                print("Changing Color")
                 color = darkModeEnabled ? status.darkModeColor : status.lightModeColor
                 borderColor = darkModeEnabled ? status.darkModeBorderColor : status.lightModeBorderColor
             }
@@ -94,11 +97,14 @@ extension SubmittedLetterView {
     }
     
     func getFloatDelay(for phase: FloatAnimation) -> CGFloat {
-        return phase == .peak ? phase.delay - 0.3 * index : 0
+        
+//        return phase == .peak ? phase.delay - (0.2 * index) : 0
+        return phase == .peak ? 2: 0
     }
 }
 
 #Preview {
     SubmittedLetterView(letter: .A, status: .correct, index: 0)
         .environmentObject(GameRunner())
+        .environment(ColorManager())
 }

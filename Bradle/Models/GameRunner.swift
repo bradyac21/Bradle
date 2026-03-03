@@ -126,7 +126,6 @@ class GameRunner: ObservableObject {
         } else if key == .backspace {
             currentAttempt.backspace()
         } else {
-            print("Adding letter \(key.letter)")
             currentAttempt.addLetter(key.letter)
         }
     }

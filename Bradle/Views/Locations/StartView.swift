@@ -13,6 +13,14 @@ struct StartView: View {
     var body: some View {
         ZStack {
             BradleColors.lightModeBackground.ignoresSafeArea()
+                #if DEBUG
+                .simultaneousGesture(
+                    TapGesture(count: 3)
+                        .onEnded {
+                            gameRunner.fullScreenCover = .testing
+                        }
+                )
+                #endif
             VStack {
                 Spacer()
                 // Bradle logo

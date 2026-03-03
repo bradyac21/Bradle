@@ -37,14 +37,6 @@ struct BradleApp: App {
                 gameRunner.sheet.screen
                     .presentationCornerRadius(12)
             }
-            #if DEBUG
-            .simultaneousGesture(
-                TapGesture(count: 3)
-                    .onEnded {
-                        gameRunner.fullScreenCover = .testing
-                    }
-            )
-            #endif
         }
         .environmentObject(gameRunner)
         .environment(colorManager)
