@@ -19,6 +19,7 @@ struct DevelopingView: View {
                     NavigationLink("Status Color", destination: StatusColorView())
                     NavigationLink("Status Borders", destination: StatusBorderView())
                     NavigationLink("Testing Tiles", destination: LetterVariants())
+                    NavigationLink("User Defaults", destination: UserDefaultsView())
                 }
             }
             .navigationTitle("Components and Colors")

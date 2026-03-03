@@ -109,7 +109,7 @@ struct LetterVariants: View {
                 
                 HStack(spacing: 0) {
                     ForEach(0..<5, id: \.self) { index in
-                        TileWrapper(
+                        TileWrapper2(
                             letter: model.texts[index],
                             status: model.statuses[index],
                             submitted: model.submitted,
@@ -153,7 +153,7 @@ struct LetterVariants: View {
     LetterVariants()
 }
 
-struct TileWrapper: View {
+struct TileWrapper2: View {
     let letter: String
     let status: SubmittedAttemptLetterStatus
     var submitted: Bool
@@ -164,16 +164,16 @@ struct TileWrapper: View {
     
     var body: some View {
         if letter == "" {
-            EmptyTile()
+            EmptyTile2()
         } else {
             if doneAnimating {
-                StatusTile(
+                StatusTile2(
                     index: index, letter: letter,
                     status: status,
                     floatTrigger: correctGuess
                 )
             } else {
-                FilledTile(
+                FilledTile2(
                     letter: letter,
                     doneAnimating: $doneAnimating,
                     flipTrigger: submitted,
@@ -184,7 +184,7 @@ struct TileWrapper: View {
     }
 }
 
-struct EmptyTile: View {
+struct EmptyTile2: View {
     @State var size: CGSize = CGSize(width: 0, height: 0)
     var body: some View {
         RoundedRectangle(cornerRadius: 0)
@@ -196,7 +196,7 @@ struct EmptyTile: View {
     }
 }
 
-struct FilledTile: View {
+struct FilledTile2: View {
     let letter: Letter
     let flipTrigger: Bool
     let flipDelay: CGFloat
@@ -251,9 +251,7 @@ struct FilledTile: View {
     }
 }
 
-
-
-struct StatusTile: View {
+struct StatusTile2: View {
     let letter: Letter
     let status: SubmittedAttemptLetterStatus
     let floatTrigger: Bool
@@ -318,7 +316,7 @@ extension View {
 extension SubmittedAttemptLetterStatus {
     var color: Color {
         switch self {
-        case .initial:
+        case .unsubmitted:
             Color.red
         case .notIncluded:
             BradleColors.darkModeNotIncluded
@@ -331,8 +329,8 @@ extension SubmittedAttemptLetterStatus {
     
     var text: String {
         switch self {
-        case .initial:
-            "Initial"
+        case .unsubmitted:
+            "Unsubmitted"
         case .notIncluded:
             "Not Included"
         case .included:
@@ -345,8 +343,8 @@ extension SubmittedAttemptLetterStatus {
     var abbreviated: String {
         switch self {
             
-        case .initial:
-            "init."
+        case .unsubmitted:
+            "unsub."
         case .notIncluded:
             "not Inc."
         case .included:
