@@ -43,6 +43,11 @@
 			path = Bradle;
 			sourceTree = "<group>";
 		};
+		D4F159792F5608F200BAA9D2 /* Developing */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Developing;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +64,7 @@
 		D49D91D42F25120200610B2C = {
 			isa = PBXGroup;
 			children = (
+				D4F159792F5608F200BAA9D2 /* Developing */,
 				D49D91DF2F25120200610B2C /* Bradle */,
 				D49D91DE2F25120200610B2C /* Products */,
 			);
@@ -90,6 +96,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D49D91DF2F25120200610B2C /* Bradle */,
+				D4F159792F5608F200BAA9D2 /* Developing */,
 			);
 			name = Bradle;
 			packageProductDependencies = (
