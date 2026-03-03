@@ -122,7 +122,7 @@ class GameRunner: ObservableObject {
         }
         
         if key == .enter {
-            handleSubmit(for: currentAttempt.attempt)
+            handleSubmit(for: currentAttempt.letters)
         } else if key == .backspace {
             currentAttempt.backspace()
         } else {
@@ -201,7 +201,7 @@ class GameRunner: ObservableObject {
             numEmptyRows -= 1
             
             // create submitted attempt attempt and
-            let submittedAttempt = SubmittedAttempt(attempt: currentAttempt.attempt, statuses: statusArray)
+            let submittedAttempt = SubmittedAttempt(attempt: currentAttempt.letters, statuses: statusArray)
             submittedAttempts.append(submittedAttempt)
             
             // set current attempt to empty

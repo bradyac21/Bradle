@@ -10,7 +10,7 @@ import SwiftUI
 @Observable
 class LetterVariantsVM {
     var texts: [String] = ["R", "O", "G", "U", "E"]
-    var statuses: [SubmittedAttemptLetterStatus] = [.correct, .included, .notIncluded, .notIncluded, .included]
+    var statuses: [Status2] = [.correct, .included, .notIncluded, .notIncluded, .included]
     var doneAnimating: [Bool] = Array(repeating: false, count: 5)
     
     var submitted: Bool = false
@@ -30,7 +30,7 @@ class LetterVariantsVM {
 struct LetterVariants: View {
     @State var model = LetterVariantsVM()
     
-    let statusChoices: [SubmittedAttemptLetterStatus] = [.correct, .included, .notIncluded]
+    let statusChoices: [Status2] = [.correct, .included, .notIncluded]
             
     var body: some View {
         ZStack {
@@ -155,7 +155,7 @@ struct LetterVariants: View {
 
 struct TileWrapper: View {
     let letter: String
-    let status: SubmittedAttemptLetterStatus
+    let status: Status2
     var submitted: Bool
     let index: Int
     let correctGuess: Bool
@@ -185,7 +185,6 @@ struct TileWrapper: View {
 }
 
 struct EmptyTile: View {
-    @State var size: CGSize = CGSize(width: 0, height: 0)
     var body: some View {
         RoundedRectangle(cornerRadius: 0)
             .fill(.clear)
@@ -205,12 +204,19 @@ struct FilledTile: View {
     @Binding var doneAnimating: Bool
     @State var shouldFlip: Bool = false
     
-    init(letter: String, doneAnimating: Binding<Bool>, flipTrigger: Bool, index: Int) {
+    init(letter: String, doneAnimating: Binding<Bool> = .constant(false), flipTrigger: Bool = false, index: Int = -1) {
         guard let convertedLetter = Letter(rawValue: letter) else {
             fatalError("Could not convert letter = \(letter) to Letter enum.")
         }
         
         self.letter = convertedLetter
+        self._doneAnimating = doneAnimating
+        self.flipTrigger = flipTrigger
+        self.flipDelay = CGFloat(index) * 0.4
+    }
+    
+    init(letter: Letter, doneAnimating: Binding<Bool> = .constant(false), flipTrigger: Bool = false, index: Int = -1) {
+        self.letter = letter
         self._doneAnimating = doneAnimating
         self.flipTrigger = flipTrigger
         self.flipDelay = CGFloat(index) * 0.4
@@ -255,7 +261,7 @@ struct FilledTile: View {
 
 struct StatusTile: View {
     let letter: Letter
-    let status: SubmittedAttemptLetterStatus
+    let status: Status2
     let floatTrigger: Bool
 
     let flipDelay: CGFloat
@@ -264,7 +270,7 @@ struct StatusTile: View {
     @State var shouldFlip: Bool = false
     
     
-    init(index: Int, letter: String, status: SubmittedAttemptLetterStatus, floatTrigger: Bool) {
+    init(index: Int, letter: String, status: Status2, floatTrigger: Bool) {
         guard let convertedLetter = Letter(rawValue: letter) else {
             fatalError("Could not convert letter = \(letter) to Letter enum.")
         }
@@ -315,7 +321,7 @@ extension View {
     }
 }
 
-extension SubmittedAttemptLetterStatus {
+extension Status2 {
     var color: Color {
         switch self {
         case .initial:

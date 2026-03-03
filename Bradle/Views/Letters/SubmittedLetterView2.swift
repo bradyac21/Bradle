@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct SubmittedLetterView2: View {
-    @State var status: SubmittedAttemptLetterStatus = .initial
+    @State var status: Status2 = .initial
     
     let letter: Letter
-    let statusToChangeTo: SubmittedAttemptLetterStatus
+    let statusToChangeTo: Status2
     let index: Int
     let delay: CGFloat
     
-    init(letter: Letter, statusToChangeTo: SubmittedAttemptLetterStatus, index: Int) {
+    init(letter: Letter, statusToChangeTo: Status2, index: Int) {
         self.letter = letter
         self.statusToChangeTo = statusToChangeTo
         self.index = index

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SubmittedAttemptView2: View {
     var attempt: [Letter]
-    @State var statuses: [SubmittedAttemptLetterStatus]
+    @State var statuses: [Status2]
     var isTarget: Bool
     
     @State var shouldFlip: Bool = false
@@ -97,7 +97,7 @@ private extension View {
     }
 }
 
-enum SubmittedAttemptLetterStatus: StatusProtocol {
+enum Status2: StatusProtocol {
     /// This is used to transition from current attempt to submitted attempt
     case initial
     case notIncluded

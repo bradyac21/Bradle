@@ -10,11 +10,12 @@ import SwiftUI
 struct CurrentLetterView: View {
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     
-    var index: Int
+    var letter: Letter
     @State var shouldPop: Bool = false
     @State var borderColor: Color = .clear
     @State var status: Status = .empty
     
+    @Environment(ColorManager.self) var colorManager
     @EnvironmentObject var gameRunner: GameRunner
     
     public var body: some View {
@@ -25,12 +26,12 @@ struct CurrentLetterView: View {
                 .border(darkModeEnabled ? status.darkModeBorderColor : status.lightModeBorderColor)
                 .popAnimation(trigger: shouldPop)
             
-            Text(gameRunner.currentAttempt.attempt[index].rawValue)
+            Text(letter.rawValue)
                 .font(.custom("NYTFranklin-Bold", size: 30))
                 .foregroundStyle(darkModeEnabled ? .white : .black)
                 .padding(.bottom, 5)
         }
-        .onChange(of: gameRunner.currentAttempt.attempt[index]) { _, newValue in
+        .onChange(of: letter) { _, newValue in
             if newValue != .empty {
                 shouldPop.toggle()
                 status = .attemptInProgress
@@ -54,9 +55,10 @@ public extension View {
 }
 
 #Preview {
-    CurrentLetterView(index: 0)
+    CurrentLetterView(letter: .A)
         .background {
             BradleColors.dark
         }
         .environmentObject(GameRunner())
+        .environment(ColorManager())
 }

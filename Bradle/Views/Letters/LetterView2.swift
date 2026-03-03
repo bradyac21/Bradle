@@ -33,7 +33,7 @@ struct LetterView2<Status: StatusProtocol>: View {
 }
 
 #Preview {
-    LetterView2(letter: .A, status: SubmittedAttemptLetterStatus.correct)
+    LetterView2(letter: .A, status: Status2.correct)
         .background {
             BradleColors.darkModeBackground.ignoresSafeArea()
         }

@@ -18,26 +18,21 @@ struct AttemptsView: View {
                 // Rows for submitted attempts
                 ForEach(gameRunner.submittedAttempts, id: \.attempt.self) { attempt in
                     SubmittedAttemptView(for: attempt)
-                        .frame(height: geometry.size.width * (1/5))
+                        .setAttemptRowHeight(using: geometry)
                     
                 }
                 
                 // Row for current attempt
                 if !gameRunner.targetWordFound {
                     CurrentAttemptView()
-                        .frame(height: geometry.size.width * (1/5))
-                        .phaseAnimator(Shake.phases, trigger: gameRunner.shouldShake) { content, phase in
-                            content
-                                .offset(x: phase.xOffset)
-                        } animation: { phase in
-                                .spring(duration: 0.01)
-                        }
+                        .setAttemptRowHeight(using: geometry)
+                        .shakeAnimation(trigger: gameRunner.shouldShake)
                 }
                 
                 // Remaining empty rows
                 ForEach(0..<gameRunner.numEmptyRows, id: \.self) { _ in
                     EmptyAttemptView()
-                        .frame(height: geometry.size.width * (1/5))
+                        .setAttemptRowHeight(using: geometry)
                 }
             }
             .padding(.horizontal, 3)
@@ -49,4 +44,19 @@ struct AttemptsView: View {
 #Preview {
     AttemptsView()
         .environmentObject(GameRunner())
+}
+
+extension View {
+    func shakeAnimation(trigger: Bool) -> some View {
+        phaseAnimator(Shake.phases, trigger: trigger) { content, phase in
+            content
+                .offset(x: phase.xOffset)
+        } animation: { phase in
+                .spring(duration: 0.01)
+        }
+    }
+    
+    func setAttemptRowHeight(using geometry: GeometryProxy) -> some View {
+        frame(height: geometry.size.width * (1/5))
+    }
 }

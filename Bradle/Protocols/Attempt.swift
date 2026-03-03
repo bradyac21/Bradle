@@ -6,5 +6,5 @@
 //
 
 protocol Attempt {
-    var attempt: [Letter] { get set }
+    var letters: [Letter] { get set }
 }

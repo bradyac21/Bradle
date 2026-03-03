@@ -5,7 +5,7 @@
 //  Created by Brady Carden on 1/24/26.
 //
 
-struct SubmittedAttempt: Attempt, Hashable {
+struct SubmittedAttempt: Hashable {
     var attempt: [Letter]
     var statuses: [Status]
     var isTarget: Bool
@@ -24,9 +24,9 @@ struct SubmittedAttempt: Attempt, Hashable {
     }
 }
 
-struct SubmittedAttempt2: Attempt, Hashable {
+struct SubmittedAttempt2: Hashable {
     var attempt: [Letter]
-    var statuses: [SubmittedAttemptLetterStatus]
+    var statuses: [Status2]
     var isTarget: Bool
     
     /// Default init for testing and previews
@@ -36,7 +36,7 @@ struct SubmittedAttempt2: Attempt, Hashable {
         self.isTarget = true
     }
     
-    init(attempt: [Letter], statuses: [SubmittedAttemptLetterStatus], isTarget: Bool = false) {
+    init(attempt: [Letter], statuses: [Status2], isTarget: Bool = false) {
         self.attempt = attempt
         self.statuses = statuses
         self.isTarget = isTarget

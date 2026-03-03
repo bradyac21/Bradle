@@ -13,7 +13,7 @@ struct CurrentAttemptView: View {
     public var body: some View {
         HStack(spacing: 0) {
             ForEach(0..<5, id: \.self) { index in
-                CurrentLetterView(index: index)
+                CurrentLetterView(letter: gameRunner.currentAttempt.letters[index])
                     .padding(.horizontal, 3)
             }
         }
@@ -24,5 +24,6 @@ struct CurrentAttemptView: View {
 #Preview {
     CurrentAttemptView()
         .environmentObject(GameRunner())
+        .environment(ColorManager())
 }
 
