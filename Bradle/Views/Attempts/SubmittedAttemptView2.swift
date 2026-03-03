@@ -99,7 +99,7 @@ private extension View {
 
 enum SubmittedAttemptLetterStatus: StatusProtocol {
     /// This is used to transition from current attempt to submitted attempt
-    case initial
+    case unsubmitted
     case notIncluded
     case included
     case correct
@@ -107,7 +107,7 @@ enum SubmittedAttemptLetterStatus: StatusProtocol {
     /// Need to handle dark mode / light mode
     var backgroundColor: Color {
         switch self {
-        case .initial:
+        case .unsubmitted:
             Color.clear
         case .notIncluded:
             BradleColors.darkModeNotIncluded
@@ -121,7 +121,7 @@ enum SubmittedAttemptLetterStatus: StatusProtocol {
     /// Need to handle dark mode / light mode
     var borderColor: Color {
         switch self {
-        case .initial:
+        case .unsubmitted:
             BradleColors.darkModeFilledBorder
         case .notIncluded:
             BradleColors.darkModeNotIncluded

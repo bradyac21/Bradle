@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameView: View {
-    @EnvironmentObject var gameRunner: GameRunner
+    @EnvironmentObject var gameRunner: GameRunner2
     @Environment(ColorManager.self) var colorManager: ColorManager
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
     
@@ -35,7 +35,7 @@ struct GameView: View {
                     .foregroundStyle(.white)
                 Spacer()
                 
-                AttemptsView()
+                AttemptsView2()
                     .containerRelativeFrame([.horizontal, .vertical]) { size, axis in
                         size * (axis == .horizontal ? 0.75 : 0.5)
                     }
@@ -63,5 +63,5 @@ struct GameView: View {
 
 #Preview {
     GameView()
-        .environmentObject(GameRunner())
+        .environmentObject(GameRunner2())
 }

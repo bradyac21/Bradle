@@ -12,7 +12,7 @@ struct KeyView: View {
     var key: KeyboardButton
     @State var status: Status = .action
     
-    @EnvironmentObject var gameRunner: GameRunner
+    @EnvironmentObject var gameRunner: GameRunner2
     
     public var body: some View {
         Button {
@@ -38,5 +38,5 @@ struct KeyView: View {
 
 #Preview {
     KeyView(key: KeyboardButton.A)
-       .environmentObject(GameRunner())
+       .environmentObject(GameRunner2())
 }

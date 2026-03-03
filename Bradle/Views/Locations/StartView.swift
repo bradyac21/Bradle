@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StartView: View {
-    @EnvironmentObject var gameRunner: GameRunner
+    @EnvironmentObject var gameRunner: GameRunner2
     
     var body: some View {
         ZStack {
@@ -74,7 +74,7 @@ struct StartView: View {
 
 #Preview {
     StartView()
-        .environmentObject(GameRunner())
+        .environmentObject(GameRunner2())
 }
 
 struct BradleButton: View {

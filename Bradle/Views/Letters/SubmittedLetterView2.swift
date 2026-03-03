@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SubmittedLetterView2: View {
-    @State var status: SubmittedAttemptLetterStatus = .initial
+    @State var status: SubmittedAttemptLetterStatus = .correct
     
     let letter: Letter
     let statusToChangeTo: SubmittedAttemptLetterStatus

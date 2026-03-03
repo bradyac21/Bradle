@@ -5,7 +5,7 @@
 //  Created by Brady Carden on 1/24/26.
 //
 
-struct SubmittedAttempt: Attempt, Hashable {
+struct SubmittedAttempt: Hashable {
     var attempt: [Letter]
     var statuses: [Status]
     var isTarget: Bool
@@ -24,7 +24,7 @@ struct SubmittedAttempt: Attempt, Hashable {
     }
 }
 
-struct SubmittedAttempt2: Attempt, Hashable {
+struct SubmittedAttempt2: Hashable {
     var attempt: [Letter]
     var statuses: [SubmittedAttemptLetterStatus]
     var isTarget: Bool

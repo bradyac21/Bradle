@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct BradleApp: App {
-    @StateObject var gameRunner = GameRunner()
+    @StateObject var gameRunner = GameRunner2()
     @State var colorManager = ColorManager()
     
     var body: some Scene {

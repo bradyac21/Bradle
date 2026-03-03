@@ -24,9 +24,6 @@ class ColorManager {
     
     var emptyBorder: Color
     var filledBorder: Color
-    var correctBorder: Color
-    var includedBorder: Color
-    var notIncludedBorder: Color
     
     var emptyBackground: Color = .clear
     var filledBackground: Color = .clear
@@ -45,7 +42,7 @@ class ColorManager {
         
         // Creating a varible for these to be used in the init
         let darkModeEnabled = UserDefaults.standard.bool(forKey: "darkModeEnabled")
-        let highContrastEnabled = UserDefaults.standard.bool(forKey: "highContast")
+        let highContrastEnabled = UserDefaults.standard.bool(forKey: "highContrastEnabled")
         
         self.darkModeEnabled = darkModeEnabled
         self.highContrastEnabled = highContrastEnabled
@@ -53,7 +50,6 @@ class ColorManager {
         if darkModeEnabled {
             self.emptyBorder = BradleColors.darkModeEmptyBorder
             self.filledBorder = BradleColors.darkModeFilledBorder
-            self.notIncludedBorder = BradleColors.darkModeNotIncluded
             self.notIncludedBackground = BradleColors.darkModeNotIncluded
             
             self.gameBackground = BradleColors.darkModeBackground
@@ -64,7 +60,6 @@ class ColorManager {
         } else {
             self.emptyBorder = BradleColors.lightModeEmptyBorder
             self.filledBorder = BradleColors.lightModeFilledBorder
-            self.notIncludedBorder = BradleColors.lightModeNotIncluded
             self.notIncludedBackground = BradleColors.lightModeNotIncluded
             
             self.gameBackground = BradleColors.lightModeBackground
@@ -75,26 +70,19 @@ class ColorManager {
         }
         
         if highContrastEnabled {
-            self.correctBorder = BradleColors.highContrastCorrect
             self.correctBackground = BradleColors.highContrastCorrect
-            
-            self.includedBorder = BradleColors.highContrastIncluded
             self.includedBackground = BradleColors.highContrastIncluded
-        } else {
-            self.correctBorder = BradleColors.green
-            self.correctBackground = BradleColors.green
             
-            self.includedBorder = BradleColors.yellow
+        } else {
+            self.correctBackground = BradleColors.green
             self.includedBackground = BradleColors.yellow
         }
-        
     }
     
     private func updateDarkModeColors(using darkModeEnabled: Bool) {
         if darkModeEnabled {
             self.emptyBorder = BradleColors.darkModeEmptyBorder
             self.filledBorder = BradleColors.darkModeFilledBorder
-            self.notIncludedBorder = BradleColors.darkModeNotIncluded
             self.notIncludedBackground = BradleColors.darkModeNotIncluded
             
             self.gameBackground = BradleColors.darkModeBackground
@@ -105,7 +93,6 @@ class ColorManager {
         } else {
             self.emptyBorder = BradleColors.lightModeEmptyBorder
             self.filledBorder = BradleColors.lightModeFilledBorder
-            self.notIncludedBorder = BradleColors.lightModeNotIncluded
             self.notIncludedBackground = BradleColors.lightModeNotIncluded
             
             self.gameBackground = BradleColors.lightModeBackground
@@ -119,41 +106,38 @@ class ColorManager {
     
     private func updateHighContrastColors(using highContrastEnabled: Bool) {
         if highContrastEnabled {
-            self.correctBorder = BradleColors.highContrastCorrect
             self.correctBackground = BradleColors.highContrastCorrect
             
-            self.includedBorder = BradleColors.highContrastIncluded
             self.includedBackground = BradleColors.highContrastIncluded
         } else {
-            self.correctBorder = BradleColors.green
             self.correctBackground = BradleColors.green
             
-            self.includedBorder = BradleColors.yellow
             self.includedBackground = BradleColors.yellow
         }
     }
     
     func borderColor(for status: Status) -> Color {
-        switch status {
-            
-        case .notTried:
-            keyboardBackground
-        case .notIncluded:
-            notIncludedBorder
-        case .included:
-            includedBorder
-        case .correct:
-            correctBorder
-        case .action:
-            keyboardBackground
-        case .empty:
-            emptyBorder
-        case .attemptInProgress:
-            filledBorder
-        }
+        .red
+//        switch status {
+//            
+//        case .notTried:
+//            keyboardBackground
+//        case .notIncluded:
+//            notIncludedBorder
+//        case .included:
+//            includedBorder
+//        case .correct:
+//            correctBorder
+//        case .action:
+//            keyboardBackground
+//        case .empty:
+//            emptyBorder
+//        case .attemptInProgress:
+//            filledBorder
+//        }
     }
     
-    func backgroundColor(for status: Status) -> Color {
+    func getBackgroundColor(for status: Status) -> Color {
         switch status {
             
         case .notTried:
@@ -173,4 +157,17 @@ class ColorManager {
         }
     }
     
+    func getBackgroundColor(for status: SubmittedAttemptLetterStatus) -> Color {
+        switch status {
+        case .unsubmitted:
+                .red
+        case .notIncluded:
+            notIncludedBackground
+        case .included:
+            includedBackground
+        case .correct:
+            correctBackground
+        }
+    }
+
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PostgameButtons: View {
     
-    @EnvironmentObject var gameRunner: GameRunner
+    @EnvironmentObject var gameRunner: GameRunner2
     
     var body: some View {
         VStack {
