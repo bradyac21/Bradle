@@ -38,9 +38,12 @@ struct BradleApp: App {
                     .presentationCornerRadius(12)
             }
             #if DEBUG
-            .onTapGesture(count: 3) {
-                gameRunner.fullScreenCover = .testing
-            }
+            .simultaneousGesture(
+                TapGesture(count: 3)
+                    .onEnded {
+                        gameRunner.fullScreenCover = .testing
+                    }
+            )
             #endif
         }
         .environmentObject(gameRunner)

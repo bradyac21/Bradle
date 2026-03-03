@@ -25,7 +25,7 @@ struct SubmittedLetterView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 1)
                 .aspectRatio(1.0, contentMode: .fit)
-                .border(colorManager.borderColor(for: status))
+                .border(borderColor)
                 .foregroundStyle(color)
 
             Text(letter.rawValue)
@@ -51,7 +51,7 @@ struct SubmittedLetterView: View {
         // Perform flip animation on appear, reveal letter status
         .onAppear {
             // TODO: Might need to set up a ColorManager
-//            borderColor = darkModeEnabled ? BradleColors.darkModeFilledBorder: BradleColors.lightModeFilledBorder
+            borderColor = darkModeEnabled ? BradleColors.darkModeFilledBorder: BradleColors.lightModeFilledBorder
             withAnimation(.linear(duration: 0.4).delay(0.4 * index)) {
                 shouldFlip = true
             } completion: {
