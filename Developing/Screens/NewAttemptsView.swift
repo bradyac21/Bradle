@@ -115,7 +115,7 @@ struct EmptyTile2: View {
     var body: some View {
         RoundedRectangle(cornerRadius: 0)
             .fill(.clear)
-            .border(colorManager.emptyBorder)
+            .border(colorManager.currentStatusBorderColors[safeKey: .empty])
             .aspectRatio(1.0, contentMode: .fit)
             .padding(.horizontal, 3)
     }
@@ -132,11 +132,11 @@ struct FilledTile2: View {
         ZStack {
             RoundedRectangle(cornerRadius: 0)
                 .fill(.clear)
-                .border(colorManager.filledBorder)
+                .border(colorManager.currentStatusBorderColors[safeKey: .filled])
                 .aspectRatio(1.0, contentMode: .fit)
             
             Text(letter.rawValue)
-                .font(.custom("NYTFranklin-Bold", size: 30))
+                .font(.custom(FontNames.bold, size: 30))
                 .minimumScaleFactor(0.5)
                 .foregroundStyle(colorManager.textColor)
         }
@@ -152,7 +152,7 @@ struct FilledTile2: View {
 
 struct StatusTile2: View {
     let letter: Letter
-    let status: Status2
+    let status: SubmittedStatus
     
     @Environment(ColorManager.self) var colorManager
     
@@ -163,7 +163,7 @@ struct StatusTile2: View {
                 .aspectRatio(1.0, contentMode: .fit)
             
             Text(letter.rawValue)
-                .font(.custom("NYTFranklin-Bold", size: 30))
+                .font(.custom(FontNames.bold, size: 30))
                 .minimumScaleFactor(0.5)
             
             // Needs a different thing because of light mode
