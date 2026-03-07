@@ -11,11 +11,9 @@ struct SettingsSheet: View {
     @Environment(\.dismiss) var dismiss
     
     @AppStorage("hardMode") var hardMode: Bool = false
-//    @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
-//    @AppStorage("highContrastMode") var highContrastMode: Bool = false
-    @AppStorage("softwareKeyboardOnly") var softwareKeyboardOnly: Bool = false
     
     @Environment(ColorManager.self) var colorManager: ColorManager
+    @EnvironmentObject var gameRunner: GameRunner
     
     var body: some View {
         @Bindable var colorManager = colorManager
@@ -25,6 +23,9 @@ struct SettingsSheet: View {
             colorManager.gameBackground.ignoresSafeArea()
             
             VStack {
+                
+                // MARK: Settings Sheet Header
+                
                 ZStack {
                     HStack {
                         Spacer()
@@ -38,43 +39,54 @@ struct SettingsSheet: View {
                     Text("SETTINGS")
                         .font(.custom(FontNames.bold, size: 20))
                 }
-                .padding(.vertical)
-                .padding(.horizontal, 25)
                 
-                Spacer()
+                // MARK: Toggleable Settings
                 
-                VStack {
-                    ToggleRow(
-                        title: "Hard Mode",
-                        description: "Any revealed hints must be used in subsequent guesses",
-                        numLines: 2,
-                        value: $hardMode
-                    )
-                    
-                    ToggleRow(
-                        title: "Dark Theme",
-                        numLines: 0,
-                        value: $colorManager.darkModeEnabled
-                    )
-                    
-                    ToggleRow(
-                        title: "High Contrast Mode",
-                        description: "Contrast and colorblindness improvements",
-                        value: $colorManager.highContrastEnabled
-                    )
-                    
-                    ToggleRow(
-                        title: "Onscreen Keyboard Input Only",
-                        description: "Ignore key input except from the onscreen keyboard. Most helpful for users using speech recognizer or other assistive devices.",
-                        numLines: 3,
-                        value: $softwareKeyboardOnly
-                    )
+                // Hard Mode
+                Toggle(isOn: Binding(
+                    get: { hardMode },
+                    set: { newValue in
+                        if gameRunner.submittedAttempts.isEmpty || hardMode {
+                            hardMode = newValue
+                        } else {
+                            gameRunner.showAlert(withMessage: .cannotEnableHardMode, duration: 1_500_000_000)
+                        }
+                    }
+                )) {
+                    Text(Strings.settingsHardModeTitle)
+                        .font(.custom(FontNames.medium, size: 20))
+                    Text(Strings.settingsHardModeBody)
+                        .font(.custom(FontNames.medium, size: 14))
                 }
-                .padding(.horizontal, 12.5)
-
-                Spacer()
+                .opacity(gameRunner.submittedAttempts.isEmpty || hardMode ? 1.0 : 0.4)
+                .padding(.vertical, 10)
+                Divider()
+                    .background(BradleColors.darkModeNotIncluded)
+                
+                // Dark Mode
+                Toggle(isOn: $colorManager.darkModeEnabled) {
+                    Text(Strings.settingsDarkModeTitle)
+                        .font(.custom(FontNames.medium, size: 20))
+                }
+                .padding(.vertical, 10)
+                Divider()
+                    .background(BradleColors.darkModeNotIncluded)
+                
+                // High Contrast Mode
+                Toggle(isOn: $colorManager.highContrastEnabled) {
+                    Text(Strings.settingsHighContrastTitle)
+                        .font(.custom(FontNames.medium, size: 20))
+                    Text(Strings.settingsHighContrastBody)
+                        .font(.custom(FontNames.medium, size: 14))
+                }
+                .padding(.vertical, 10)
+                Divider()
+                    .background(BradleColors.darkModeNotIncluded)
+                
             }
-            .foregroundStyle(colorManager.textColor)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 25)
+            .foregroundStyle(colorManager.primary)
         }
     }
 }
@@ -85,46 +97,7 @@ struct SettingsSheet: View {
     }
     .sheet(isPresented: .constant(true)) {
         SettingsSheet()
-            .presentationDetents([.medium])
+            .presentationDetents([.fraction(0.4)])
             .environment(ColorManager())
-    }
-}
-
-struct ToggleRow: View {
-    var title: String
-    var description: String? = nil
-    var numLines: Int = 1
-    @Binding var value: Bool
-
-    @Environment(ColorManager.self) var colorManager
-    
-    var body: some View {
-        VStack {
-            HStack {
-                VStack(alignment: .leading) {
-                    Spacer()
-                    Text(title)
-                        .font(.custom(FontNames.medium, size: 20))
-                    
-                    if let description = description {
-                        Text(description)
-                            .font(.custom(FontNames.medium, size: 14))
-                    }
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .containerRelativeFrame(.horizontal) { length, _ in
-                    length * 0.7
-                }
-                Toggle(isOn: $value) {
-                }
-                .tint(colorManager.submittedStatusColors[safeKey: .correct])
-            }
-            Divider()
-                .background(BradleColors.darkModeNotIncluded)
-        }
-        .containerRelativeFrame(.vertical) { height, _ in
-            height * (0.125 + (CGFloat(numLines) * 0.05))
-        }
     }
 }

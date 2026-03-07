@@ -11,17 +11,17 @@ import UserNotifications
 
 class GameRunner: ObservableObject {
     @AppStorage("hardMode") var hardModeEnabled: Bool = false
+    var hints: [Hint] = []
+    
     @Published var location: AppLocation = .start
     @Published var fullScreenCover: FullScreenCover = .empty {
         didSet {
             
             /// Need to wait for animations before showing victory screen
             if fullScreenCover == .victory {
-                //DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                    self.showFullScreenCover = true
-                //}
+                self.showFullScreenCover = true
                 
-            // When fullScreenCover is assigned, trigger showing the sheet
+                // When fullScreenCover is assigned, trigger showing the sheet
             } else if fullScreenCover != .empty {
                 showFullScreenCover = true
             }
@@ -61,35 +61,26 @@ class GameRunner: ObservableObject {
         }
     }
     
-    @Published var numEmptyRows: Int = 5
+    var numEmptyRows: Int {
+        if gameComplete {
+            return 6 - submittedAttempts.count
+        } else if submittedAttempts.count < 6 {
+            return 6 - submittedAttempts.count - 1
+        } else {
+            return 0
+        }
+    }
     @Published var submittedAttempts: [SubmittedAttempt]
     @Published var currentAttempt: CurrentAttempt
     
     @Published var gameComplete: Bool = false
-    @Published var targetWordFound: Bool = false
     @Published var hideKeyboard: Bool = false
     
     @Published var currentAttemptIndex: Int = 0
     @Published var shouldShake: Bool = false
-    @Published var alertMessage: String = " " {
-        didSet {
-            self.showAlert = true
-        }
-    }
+    @Published var alertMessage: AlertMessage = .empty
     
-    @Published var showAlert: Bool = false {
-        didSet {
-            // Stop showing alert after 2 seconds
-            if showAlert {
-                Task {
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                    withAnimation(.easeOut(duration: 0.2)) {
-                        showAlert = false
-                    }
-                }
-            }
-        }
-    }
+    @Published var shouldShowAlert: Bool = false
     
     // Is true while flip animation is running
     var disableKeyboardInput: Bool = false
@@ -102,7 +93,7 @@ class GameRunner: ObservableObject {
         self.keyboardManager = KeyboardManager()
         self.submittedAttempts = [SubmittedAttempt]()
         self.currentAttempt = CurrentAttempt()
-
+        
         // Find words file
         guard let file = Bundle.main.url(forResource: "words", withExtension: "json") else {
             fatalError("Could not find words file.")
@@ -149,22 +140,28 @@ class GameRunner: ObservableObject {
         
         // Ensure that the attempt is full
         if attempt.contains(.empty) {
-            alertMessage = AlertMessage.notEnoughLetters.message
             shouldShake.toggle()
+            showAlert(withMessage: .notEnoughLetters)
+            
             return
         }
         
         // Check that word is a valid word
         if !words.contains(attempt.toString()) {
-            // trigger shake animation
             shouldShake.toggle()
-            alertMessage = AlertMessage.notInWordList.message
+            showAlert(withMessage: .notInWordList)
+            
             return
         }
         
-        // TODO: Add check for hard mode conformance
+        // Check hard more conformance
         if hardModeEnabled {
             // Evaluate
+            if let failedHint = checkHintConformance(for: attempt) {
+                showUnsatisfiedHintAlert(for: failedHint)
+                shouldShake.toggle()
+                return
+            }
         }
         
         // MARK: Evaluate valid submission
@@ -174,12 +171,14 @@ class GameRunner: ObservableObject {
             let submittedAttempt = SubmittedAttempt(letter: attempt, statuses: Array(repeating: .correct, count: 5), isTarget: true)
             submittedAttempts.append(submittedAttempt)
             
-            targetWordFound = true
+            gameComplete = true
             
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 4_500_000_000)
                 fullScreenCover = .victory
             }
+            
+            setVictoryMessage()
             
             print("Game Complete.")
             return
@@ -195,52 +194,66 @@ class GameRunner: ObservableObject {
                     statusArray[index] = .correct
                     keyboardManager.buttonStatus[letter] = .correct
                     
-                // if word is included but in wrong spot
+                    // if word is included but in wrong spot
                 } else {
                     statusArray[index] = .included
                     keyboardManager.buttonStatus[letter] = .included
                 }
-            
+                
                 // if letter is not included
             } else {
                 keyboardManager.buttonStatus[letter] = .notIncluded
             }
         }
         
+        // MARK: - Submit Attemmpt
+        
+        // Disable keyboard while flip animation is running
+        disableKeyboard()
+        
+        // create submitted attempt
+        let submittedAttempt = SubmittedAttempt(letter: currentAttempt.letters, statuses: statusArray)
+        submittedAttempts.append(submittedAttempt)
+        
+        // update hints
+        updateHints(with: submittedAttempt)
+        
+        // Reenable keyboard when flip animation is done
+        Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            enableKeyboard()
+        }
+        
         // MARK: - Advance to next turn
         
         // if player has more attempts left
-        if currentAttemptIndex < 6 {
-            currentAttemptIndex += 1
-            numEmptyRows -= 1
-
-            // Disable keyboard while flip animation is running
-            disableKeyboard()
-
-            // create submitted attempt attempt and
-            let submittedAttempt = SubmittedAttempt(letter: currentAttempt.letters, statuses: statusArray)
-            submittedAttempts.append(submittedAttempt)
-            
+        if submittedAttempts.count < 6 {
             // set current attempt to empty
             currentAttempt = CurrentAttempt()
             
-            // Reenable keyboard when flip animation is done
-            Task {
-                try? await Task.sleep(nanoseconds: 2_000_000_000)
-                enableKeyboard()
-            }
-            
         // if out of attempts
         } else {
-            alertMessage = AlertMessage.fail.message
             gameComplete = true
+            
+            Task {
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                showAlert(withMessage: .word(targetWord.toString()), dismiss: false)
+                
+                try? await Task.sleep(nanoseconds: 2_500_000_000)
+                fullScreenCover = .victory
+            }
         }
     }
     
     // Sets alertMessage if game is won
     func setVictoryMessage() {
         let attempts = submittedAttempts.count
-        alertMessage = AlertMessage.victoryMessages[attempts - 1]
+        Task {
+            
+            // Delay to allow flip animation to reveal status
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            showAlert(withMessage: .victoryMessages[attempts - 1], duration: 2_500_000_000)
+        }
     }
     
     func enableKeyboard() {
@@ -249,5 +262,82 @@ class GameRunner: ObservableObject {
     
     func disableKeyboard() {
         self.disableKeyboardInput = true
+    }
+    
+    func showAlert(withMessage message: AlertMessage, dismiss: Bool = true, duration: UInt64 = 1_000_000_000) {
+        alertMessage = message
+        shouldShowAlert = true
+        
+        if dismiss {
+            Task {
+                try? await Task.sleep(nanoseconds: duration)
+                withAnimation(.easeOut(duration: 0.2)) {
+                    shouldShowAlert = false
+                    alertMessage = .empty
+                }
+            }
+        }
+    }
+    
+    func showUnsatisfiedHintAlert(for hint: Hint) {
+        alertMessage = .unsatisfiedHint(hint)
+        shouldShowAlert = true
+        
+        Task {
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            withAnimation(.easeOut(duration: 0.2)) {
+                shouldShowAlert = false
+                alertMessage = .empty
+            }
+        }
+    }
+    
+    func checkHintConformance(for attempt: [Letter]) -> Hint? {
+        
+        for hint in hints {
+            
+            // if the hint has a location, ensure hint letter is in correct location in attempt
+            if let location = hint.location, attempt.firstIndex(of: hint.letter) != location {
+                return hint
+                
+            // if the hint does not have location, ensure the word contains the hint letter
+            } else if !attempt.contains(hint.letter) {
+                return hint
+            }
+        }
+        
+        return nil
+    }
+    
+    func updateHints(with submittedAttempt: SubmittedAttempt) {
+        for (index, (letter, status)) in submittedAttempt.letterStatuses.enumerated() {
+            
+            // skip if not included
+            // Uneccessary but technically a performance bonus
+            if status == .notIncluded {
+                continue
+                
+                // If letter is included in wrong spot
+            } else if status == .included {
+                
+                // If there is not a hint for this letter already
+                if !hints.contains(where: {$0.letter == letter }) {
+                    
+                    // Add hint. nil location represents any
+                    hints.append(Hint(letter: letter, location: nil))
+                }
+                
+                // If letter is in the correct spot
+            } else if status == .correct {
+                
+                // if there is a hint for this letter with any location
+                hints.removeAll(where: { $0.letter == letter && $0.location == nil })
+                
+                // Add a hint with a location
+                hints.append(Hint(letter: letter, location: index))
+            }
+        }
+        
+        print("Updated Hints: \n\(hints)")
     }
 }

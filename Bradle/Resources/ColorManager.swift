@@ -24,8 +24,8 @@ class ColorManager {
 
     var gameBackground: Color
     var defaultBackground: Color
-    var keyboardBackground: Color
-    var textColor: Color
+    var primary: Color
+    var secondary: Color
     
     var submittedStatusColors: [SubmittedStatus?: Color]
     var currentStatusBorderColors: [CurrentStatus: Color]
@@ -34,7 +34,7 @@ class ColorManager {
         
         // Creating a varible for these to be used in the init
         let darkModeEnabled = UserDefaults.standard.bool(forKey: "darkModeEnabled")
-        let highContrastEnabled = UserDefaults.standard.bool(forKey: "highContast")
+        let highContrastEnabled = UserDefaults.standard.bool(forKey: "highContrastEnabled")
         
         self.darkModeEnabled = darkModeEnabled
         self.highContrastEnabled = highContrastEnabled
@@ -43,14 +43,14 @@ class ColorManager {
             self.gameBackground = BradleColors.darkModeBackground
             self.defaultBackground = BradleColors.dark
             
-            self.keyboardBackground = BradleColors.darkModeKeyboardFrameColor
-            self.textColor = .white
+            self.primary = .white
+            self.secondary = .black
         } else {
             self.gameBackground = BradleColors.lightModeBackground
             self.defaultBackground = BradleColors.light
             
-            self.keyboardBackground = BradleColors.lightModeKeyboardFrameColor
-            self.textColor = .black
+            self.primary = .black
+            self.secondary = .white
         }
         
         self.submittedStatusColors = [
@@ -71,14 +71,14 @@ class ColorManager {
             self.gameBackground = BradleColors.darkModeBackground
             self.defaultBackground = BradleColors.dark
             
-            self.keyboardBackground = BradleColors.darkModeKeyboardFrameColor
-            self.textColor = .white
+            self.primary = .white
+            self.secondary = .black
         } else {
             self.gameBackground = BradleColors.lightModeBackground
             self.defaultBackground = BradleColors.light
             
-            self.keyboardBackground = BradleColors.lightModeKeyboardFrameColor
-            self.textColor = .black
+            self.primary = .black
+            self.secondary = .white
         }
         
         submittedStatusColors[.notIncluded] = darkModeEnabled ? BradleColors.darkModeNotIncluded : BradleColors.lightModeNotIncluded

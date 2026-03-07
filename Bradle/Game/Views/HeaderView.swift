@@ -14,22 +14,22 @@ struct HeaderView: View {
     
     public var body: some View {
         HStack {
-            Button(action: {
+            Button {
                 gameRunner.sheet = .howToPlay
-            }, label: {
+            } label: {
                 Image(systemName: "questionmark.circle")
-            })
+            }
             Spacer()
             Text("BRADLE")
-                .font(.headline)
+                .font(.custom(FontNames.bold, size: 17.5))
             Spacer()
-            Button(action: {
+            Button {
                 gameRunner.sheet = .settings
-            }, label: {
+            } label: {
                 Image(systemName: "gear")
-            })
+            }
         }
-        .foregroundStyle(colorManager.textColor)
+        .foregroundStyle(colorManager.primary)
     }
 }
 

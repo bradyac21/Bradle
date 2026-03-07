@@ -24,7 +24,7 @@ struct SubmittedLetterView: View {
         self.status = status
         self.index = CGFloat(index)
         self.borderColor = colorManager.currentStatusBorderColors[safeKey: .filled]
-        self.letterColor = colorManager.textColor
+        self.letterColor = colorManager.primary
         self._colorManager = Bindable(colorManager)
     }
     

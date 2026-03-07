@@ -164,7 +164,6 @@ struct GuessDistView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
             histogram = account.getGuessDistribution()
-            print(histogram)
         }
     }
 }

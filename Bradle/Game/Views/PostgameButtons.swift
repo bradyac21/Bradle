@@ -14,36 +14,53 @@ struct PostgameButtons: View {
     
     var body: some View {
         VStack {
-            Spacer()
-            Button(action: {
+            PostgameButton(label: "See results", fill: false) {
                 gameRunner.fullScreenCover = .results
-            }, label: {
-                Text("See results")
-                    .foregroundStyle(colorManager.textColor)
-                    .padding(.horizontal, 87)
-                    .padding(.vertical, 8)
-                    .background {
-                        Capsule()
-                            .stroke(colorManager.textColor)
-                    }
-            })
-            .buttonStyle(.plain)
-            .padding(.bottom, 5)
+            }
             
-            Button(action: {
-                print("Play the Bradle Archive tapped")
-            }, label: {
-                Text("Play the Bradle Archive")
-                    .foregroundStyle(colorManager.textColor)
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 8)
-                    .background {
-                        Capsule()
-                            .stroke(colorManager.textColor)
-                    }
-            })
-            .buttonStyle(.plain)
             Spacer()
+                .frame(height: 10)
+            
+            PostgameButton(label: "Play the Bradle Archive", fill: false) {
+                // TODO: Implement Bradle Archive
+                print("Play the Bradle Archive Tapped")
+            }
         }
+    }
+}
+
+#Preview {
+    ZStack {
+        BradleColors.darkModeBackground.ignoresSafeArea()
+        PostgameButtons()
+            .environmentObject(GameRunner())
+            .environment(ColorManager())
+    }
+}
+
+struct PostgameButton: View {
+    let label: String
+    let fill: Bool
+    let action: () -> ()
+    
+    @Environment(ColorManager.self) var colorManager
+    
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(fill ?  colorManager.primary : .clear)
+                    .stroke(colorManager.primary)
+                    .frame(width: 250, height: 40)
+                
+                Text(label)
+                    .font(.custom(FontNames.bold, size: 16))
+                    .foregroundStyle(fill ? colorManager.secondary : colorManager.primary)
+                    .padding(.bottom, 2)
+            }
+        }
+        .buttonStyle(.plain)
     }
 }

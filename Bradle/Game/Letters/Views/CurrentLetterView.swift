@@ -26,7 +26,7 @@ struct CurrentLetterView: View {
             
             Text(letter.rawValue)
                 .font(.custom(FontNames.bold, size: 30))
-                .foregroundStyle(colorManager.textColor)
+                .foregroundStyle(colorManager.primary)
                 .padding(.bottom, 5)
         }
         

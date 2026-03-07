@@ -138,7 +138,7 @@ struct FilledTile2: View {
             Text(letter.rawValue)
                 .font(.custom(FontNames.bold, size: 30))
                 .minimumScaleFactor(0.5)
-                .foregroundStyle(colorManager.textColor)
+                .foregroundStyle(colorManager.primary)
         }
         .popAnimation(trigger: popTrigger)
         .padding(.horizontal, 3)
@@ -167,7 +167,7 @@ struct StatusTile2: View {
                 .minimumScaleFactor(0.5)
             
             // Needs a different thing because of light mode
-                .foregroundStyle(colorManager.textColor)
+                .foregroundStyle(colorManager.primary)
                 .padding(.bottom, 5)
         }
         .padding(.horizontal, 3)

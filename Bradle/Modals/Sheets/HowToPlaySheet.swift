@@ -94,7 +94,7 @@ struct HowToPlaySheet: View {
             Spacer()
         }
         .padding(.top, 20)
-        .foregroundStyle(colorManager.textColor)
+        .foregroundStyle(colorManager.primary)
         .background(colorManager.gameBackground)
     }
 }
@@ -114,7 +114,7 @@ private struct BulletPoint: View {
                 .font(.custom(FontNames.normal, size: 15))
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .foregroundStyle(colorManager.textColor)
+        .foregroundStyle(colorManager.primary)
         .padding(.top, 5)
     }
 }

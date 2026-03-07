@@ -24,7 +24,7 @@ enum FullScreenCover {
     var screen: some View {
         switch self {
         case .victory:
-            AnyView(VictoryScreen())
+            AnyView(GameOverView(gameOverCase: .victory))
         case .results:
             AnyView(ResultsView())
         case .empty:
@@ -56,7 +56,7 @@ enum BradleSheet {
         case .settings:
             AnyView(
                 SettingsSheet()
-                    .presentationDetents([.medium])
+                    .presentationDetents([.fraction(0.4)])
             )
         }
     }

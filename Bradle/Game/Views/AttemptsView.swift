@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AttemptsView: View {
     
+    let range = 0..<0
+    
     @EnvironmentObject var gameRunner: GameRunner
     @Environment(ColorManager.self) var colorManager
     
@@ -24,7 +26,7 @@ struct AttemptsView: View {
                 }
                 
                 // Row for current attempt
-                if !gameRunner.targetWordFound {
+                if !gameRunner.gameComplete {
                     CurrentAttemptView()
                         .setAttemptRowHeight(using: geometry)
                         .shakeAnimation(trigger: gameRunner.shouldShake)

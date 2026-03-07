@@ -54,15 +54,15 @@ struct GameView: View {
                 }
             }
             
-            if gameRunner.showAlert {
-                Text(gameRunner.alertMessage)
+            if gameRunner.shouldShowAlert {
+                Text(gameRunner.alertMessage.string)
                     .font(.custom(FontNames.bold, size: 15))
-                    .foregroundStyle(colorManager.darkModeEnabled ? .black : .white)
+                    .foregroundStyle(colorManager.secondary)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background {
                         RoundedRectangle(cornerRadius: 5)
-                            .fill(colorManager.darkModeEnabled ? .white : .black)
+                            .fill(colorManager.primary)
                     }
                     .padding(.bottom, 590)
                     .transition(.asymmetric(insertion: .identity, removal: .opacity))

@@ -1,5 +1,5 @@
 //
-//  VictoryScreen.swift
+//  GameOverView.swift
 //  Bradle
 //
 //  Created by Brady Carden on 2/10/26.
@@ -7,7 +7,14 @@
 
 import SwiftUI
 
-struct VictoryScreen: View {
+enum GameOverCase {
+    case victory, fail
+}
+
+struct GameOverView: View {
+    
+    let gameOverCase: GameOverCase
+    
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var gameRunner: GameRunner
     
@@ -33,20 +40,23 @@ struct VictoryScreen: View {
                 StarThing()
                 
                 // Congratulations
-                Text("Congratulations!")
+                Text(gameOverCase == .victory ? Strings.victoryTitle : Strings.failTitle)
                     .font(.custom(FontNames.mainTitle, size: 40))
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                     .padding(.bottom, 5)
                 
                 // Track message
-                Text("Track your Bradle win\npercentage and earn\nbadges for big\nachievements.")
+                Text(gameOverCase == .victory ? Strings.victoryBody : Strings.failBody)
                     .font(.custom(FontNames.mediumFancy, size: 20))
-
-                    .multilineTextAlignment(.center)
                     .kerning(1)
+                    .multilineTextAlignment(.center)
                     .lineSpacing(0)
                     .foregroundStyle(.white)
                     .padding(.bottom, 10)
+                
+                Spacer()
+                    .frame(height: 40)
                 
                 Button(action: {
                     print("Share tapped")
@@ -79,6 +89,9 @@ struct VictoryScreen: View {
                 })
                 .buttonStyle(.plain)
                 .padding(.bottom, 30)
+                
+                Spacer()
+                    .frame(height: 40)
                 
                 // Share Button
                 Button(action: {
@@ -114,6 +127,6 @@ struct VictoryScreen: View {
 }
 
 #Preview {
-    VictoryScreen()
+    GameOverView(gameOverCase: .fail)
         .environmentObject(GameRunner())
 }
