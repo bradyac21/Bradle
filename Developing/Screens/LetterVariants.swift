@@ -5,12 +5,14 @@
 //  Created by Brady Carden on 3/2/26.
 //
 
+#if DEBUG
+
 import SwiftUI
 
 @Observable
 class LetterVariantsVM {
     var texts: [String] = ["R", "O", "G", "U", "E"]
-    var statuses: [Status2] = [.correct, .included, .notIncluded, .notIncluded, .included]
+    var statuses: [SubmittedStatus] = [.correct, .included, .notIncluded, .notIncluded, .included]
     var doneAnimating: [Bool] = Array(repeating: false, count: 5)
     
     var submitted: Bool = false
@@ -30,7 +32,7 @@ class LetterVariantsVM {
 struct LetterVariants: View {
     @State var model = LetterVariantsVM()
     
-    let statusChoices: [Status2] = [.correct, .included, .notIncluded]
+    let statusChoices: [SubmittedStatus] = [.correct, .included, .notIncluded]
             
     var body: some View {
         ZStack {
@@ -155,7 +157,7 @@ struct LetterVariants: View {
 
 struct TileWrapper: View {
     let letter: String
-    let status: Status2
+    let status: SubmittedStatus
     var submitted: Bool
     let index: Int
     let correctGuess: Bool
@@ -230,7 +232,7 @@ struct FilledTile: View {
                 .aspectRatio(1.0, contentMode: .fit)
             
             Text(letter.rawValue)
-                .font(.custom("NYTFranklin-Bold", size: 30))
+                .font(.custom(FontNames.bold, size: 30))
                 .minimumScaleFactor(0.5)
                 .foregroundStyle(.white)
         }
@@ -261,7 +263,7 @@ struct FilledTile: View {
 
 struct StatusTile: View {
     let letter: Letter
-    let status: Status2
+    let status: SubmittedStatus
     let floatTrigger: Bool
 
     let flipDelay: CGFloat
@@ -270,7 +272,7 @@ struct StatusTile: View {
     @State var shouldFlip: Bool = false
     
     
-    init(index: Int, letter: String, status: Status2, floatTrigger: Bool) {
+    init(index: Int, letter: String, status: SubmittedStatus, floatTrigger: Bool) {
         guard let convertedLetter = Letter(rawValue: letter) else {
             fatalError("Could not convert letter = \(letter) to Letter enum.")
         }
@@ -290,7 +292,7 @@ struct StatusTile: View {
                 .aspectRatio(1.0, contentMode: .fit)
             
             Text(letter.rawValue)
-                .font(.custom("NYTFranklin-Bold", size: 30))
+                .font(.custom(FontNames.bold, size: 30))
                 .minimumScaleFactor(0.5)
                 .foregroundStyle(.white)
                 .padding(.bottom, 5)
@@ -321,11 +323,9 @@ extension View {
     }
 }
 
-extension Status2 {
+extension SubmittedStatus {
     var color: Color {
         switch self {
-        case .initial:
-            Color.red
         case .notIncluded:
             BradleColors.darkModeNotIncluded
         case .included:
@@ -337,8 +337,6 @@ extension Status2 {
     
     var text: String {
         switch self {
-        case .initial:
-            "Initial"
         case .notIncluded:
             "Not Included"
         case .included:
@@ -350,9 +348,6 @@ extension Status2 {
     
     var abbreviated: String {
         switch self {
-            
-        case .initial:
-            "init."
         case .notIncluded:
             "not Inc."
         case .included:
@@ -362,3 +357,4 @@ extension Status2 {
         }
     }
 }
+#endif
