@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum SubmittedStatus: CaseIterable {
+enum SubmittedStatus: CaseIterable, Codable {
     case notIncluded
     case included
     case correct

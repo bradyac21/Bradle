@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Letter: String, CaseIterable, Decodable, Equatable {
+enum Letter: String, CaseIterable, Codable, Equatable {
     case A = "A"
     case B = "B"
     case C = "C"

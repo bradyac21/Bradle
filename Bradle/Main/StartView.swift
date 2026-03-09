@@ -68,6 +68,33 @@ struct StartView: View {
                 
                 Spacer()
             }
+            .onAppear {
+                let account = BradleAccount(
+                    username: "test_username",
+                    password: "test_password",
+                    gamesPlayed: 12,
+                    gamesWon: 12,
+                    winPercentage: 1,
+                    currentStreak: 1,
+                    longestStreak: 4,
+                    guessDistribution: [1:0, 2:0, 3:3, 4:3, 5:6, 6:0],
+                    gameHistory: [
+                        CompletedGame(date: date1, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date2, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date3, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date4, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date5, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date6, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date7, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date8, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date9, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date10, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date11, submittedAttempts: submittedAttempts, won: true),
+                        CompletedGame(date: date12, submittedAttempts: submittedAttempts, won: true),]
+                )
+                
+                FakeServer.shared.saveAccountData(for: account)
+            }
         }
     }
 }
@@ -101,5 +128,21 @@ struct BradleButton: View {
             .onTapGesture {
                 action()
             }
+           
     }
 }
+
+
+let submittedAttempts = [SubmittedAttempt()]
+let date1: Date = Calendar.current.date(byAdding: .day, value: 0, to: Date.now)!
+let date2 = Calendar.current.date(byAdding: .day, value: -2, to: Date.now)!
+let date3 = Calendar.current.date(byAdding: .day, value: -3, to: Date.now)!
+let date4 = Calendar.current.date(byAdding: .day, value: -5, to: Date.now)!
+let date5 = Calendar.current.date(byAdding: .day, value: -7, to: Date.now)!
+let date6 = Calendar.current.date(byAdding: .day, value: -8, to: Date.now)!
+let date7 = Calendar.current.date(byAdding: .day, value: -9, to: Date.now)!
+let date8 = Calendar.current.date(byAdding: .day, value: -10, to: Date.now)!
+let date9 = Calendar.current.date(byAdding: .day, value: -12, to: Date.now)!
+let date10 = Calendar.current.date(byAdding: .day, value: -14, to: Date.now)!
+let date11 = Calendar.current.date(byAdding: .day, value: -15, to: Date.now)!
+let date12 = Calendar.current.date(byAdding: .day, value: -16, to: Date.now)!

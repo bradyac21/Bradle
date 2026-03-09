@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SubmittedAttempt: Identifiable, Hashable {
+struct SubmittedAttempt: Identifiable, Hashable, Codable {
     let id = UUID()
     var letters: [Letter]
     var statuses: [SubmittedStatus]

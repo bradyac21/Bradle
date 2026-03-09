@@ -127,43 +127,43 @@ struct StatView: View {
 struct GuessDistView: View {
     
     let recentGuess = 3
-    @State var account = BradleAccount()
+    //@State var account = BradleAccount()
     @State var histogram = [Int: Int]()
     
     var body: some View {
         VStack(alignment: .leading) {
-            ForEach(1..<7) { index in
-                HStack {
-                    Text(index.description)
-                        .font(.system(size: 15))
-                        .frame(width: 10)
-                        .bold()
-                    Rectangle()
-                        .fill(index == recentGuess ? BradleColors.green : BradleColors.darkModeFilledBorder)
-                        .containerRelativeFrame(.horizontal) { width, _ in
-                            if let indexWinTotal = histogram[index], let histMax = histogram.values.max() {
-                                let factor = Float(indexWinTotal) / (Float(histMax) * 1.25)
-                                return width * CGFloat(factor)
-                            } else {
-                                return 20
-                            }
-                        }
-                        
-                        .overlay {
-                            Text((histogram[index] ?? 0).description)
-                                .font(.system(size: 15))
-                                .padding(.trailing, 6)
-                                .padding(.bottom, 1)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                            
-                        }
-                }
-                .frame(height: 20)
-            }
+//            ForEach(1..<7) { index in
+//                HStack {
+//                    Text(index.description)
+//                        .font(.system(size: 15))
+//                        .frame(width: 10)
+//                        .bold()
+//                    Rectangle()
+//                        .fill(index == recentGuess ? BradleColors.green : BradleColors.darkModeFilledBorder)
+//                        .containerRelativeFrame(.horizontal) { width, _ in
+//                            if let indexWinTotal = histogram[index], let histMax = histogram.values.max() {
+//                                let factor = Float(indexWinTotal) / (Float(histMax) * 1.25)
+//                                return width * CGFloat(factor)
+//                            } else {
+//                                return 20
+//                            }
+//                        }
+//                        
+//                        .overlay {
+//                            Text((histogram[index] ?? 0).description)
+//                                .font(.system(size: 15))
+//                                .padding(.trailing, 6)
+//                                .padding(.bottom, 1)
+//                                .frame(maxWidth: .infinity, alignment: .trailing)
+//                            
+//                        }
+//                }
+//                .frame(height: 20)
+//            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
-            histogram = account.getGuessDistribution()
+           // histogram = account.getGuessDistribution()
         }
     }
 }
