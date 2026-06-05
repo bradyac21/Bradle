@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct BradleApp: App {
-    @StateObject var gameRunner = GameRunner()
+    @State var gameRunner = GameRunner()
     @State var colorManager = ColorManager()
+    let container = try! ModelContainer(for: BradleAccount.self)
     
     var body: some Scene {
         WindowGroup {
@@ -24,21 +26,28 @@ struct BradleApp: App {
                         .transition(.opacity)
                 }
             }
+            .onAppear {
+                gameRunner.loadAccount(from: container.mainContext)
+            }
+            
             // Handles transition from StartView to GameView
             .animation(.easeInOut, value: gameRunner.location)
-            .fullScreenCover(isPresented: $gameRunner.showFullScreenCover) {
-                if gameRunner.fullScreenCover == .victory {
+            .fullScreenCover(item: $gameRunner.fullScreenCover) {
+                
+                // TODO: What case is this for?
+                if gameRunner.fullScreenCover == .gameOver {
                     gameRunner.hideKeyboard = true
                 }
-            } content: {
-                gameRunner.fullScreenCover.screen
+            } content: { cover in
+                cover.screen
             }
-            .sheet(isPresented: $gameRunner.showSheet) {
-                gameRunner.sheet.screen
+            .sheet(item: $gameRunner.sheet) { sheet in
+                sheet.screen
                     .presentationCornerRadius(12)
             }
         }
-        .environmentObject(gameRunner)
+        .modelContainer(container)
+        .environment(gameRunner)
         .environment(colorManager)
     }
 }

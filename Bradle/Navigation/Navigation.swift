@@ -12,52 +12,58 @@ enum AppLocation {
     case game
 }
 
-enum FullScreenCover {
-    case victory
-    case results
-    case empty
+enum FullScreenCover: Identifiable, Equatable {
+    case gameOver
+    case results(BradleAccount)
     
     #if DEBUG
     case testing
     #endif
     
+    var id: Int {
+        switch self {
+        case .gameOver: 0
+        case .results(_): 1
+            #if DEBUG
+        case .testing: 2
+            #endif
+        }
+    }
+    
+    @ViewBuilder
     var screen: some View {
         switch self {
-        case .victory:
-            AnyView(GameOverView(gameOverCase: .victory))
-        case .results:
-            AnyView(ResultsView())
-        case .empty:
-            AnyView(EmptyView())
+        case .gameOver:
+            GameOverView(gameOverCase: .victory)
+        case .results(let account):
+            ResultsView(account: account)
+            
         #if DEBUG
         case .testing:
-            AnyView(DevelopingView())
+            DevelopingView()
         #endif
         }
     }
 }
 
-enum BradleSheet {
+enum BradleSheet: Int, Identifiable {
     case login
-    case empty
     case howToPlay
     case settings
     
+    var id: Int { self.rawValue }
+    
+    @ViewBuilder
     var screen: some View {
         switch self {
         case .login:
-            AnyView(LogInSheet())
-        case .empty:
-            AnyView(EmptyView())
+            LoginSheet()
         case .howToPlay:
-            AnyView(HowToPlaySheet()
+            HowToPlaySheet()
                 .presentationDetents([.large])
-            )
         case .settings:
-            AnyView(
-                SettingsSheet()
-                    .presentationDetents([.fraction(0.4)])
-            )
+            SettingsSheet()
+                .presentationDetents([.fraction(0.4)])
         }
     }
 }

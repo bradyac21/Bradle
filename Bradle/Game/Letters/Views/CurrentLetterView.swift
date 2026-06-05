@@ -14,8 +14,8 @@ struct CurrentLetterView: View {
     @State var status: CurrentStatus = .empty
     
     @Environment(ColorManager.self) var colorManager
-    @EnvironmentObject var gameRunner: GameRunner
-    
+    @Environment(GameRunner.self) var gameRunner
+
     public var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 0)
@@ -47,6 +47,6 @@ struct CurrentLetterView: View {
         .background {
             BradleColors.dark
         }
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
         .environment(ColorManager())
 }

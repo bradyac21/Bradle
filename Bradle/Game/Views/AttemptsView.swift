@@ -11,7 +11,7 @@ struct AttemptsView: View {
     
     let range = 0..<0
     
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(GameRunner.self) var gameRunner
     @Environment(ColorManager.self) var colorManager
     
     public var body: some View {
@@ -29,7 +29,7 @@ struct AttemptsView: View {
                 if !gameRunner.gameComplete {
                     CurrentAttemptView()
                         .setAttemptRowHeight(using: geometry)
-                        .shakeAnimation(trigger: gameRunner.shouldShake)
+                        .shakeAnimation(trigger: gameRunner.shouldShakeCurrentAttempt)
                 }
                 
                 // Remaining empty rows
@@ -47,7 +47,7 @@ struct AttemptsView: View {
 // MARK: - Functions
 #Preview {
     AttemptsView()
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
         .environment(ColorManager())
 }
 

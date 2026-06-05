@@ -16,7 +16,7 @@ struct SubmittedLetterView: View {
     var status: SubmittedStatus
     var index: CGFloat
     
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(GameRunner.self) var gameRunner
     @Bindable var colorManager: ColorManager
     
     init(letter: Letter, status: SubmittedStatus, index: Int, colorManager: ColorManager) {
@@ -80,6 +80,6 @@ struct SubmittedLetterView: View {
 
 #Preview {
     SubmittedLetterView(letter: .A, status: .correct, index: 0, colorManager: ColorManager())
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
         .environment(ColorManager())
 }

@@ -7,7 +7,7 @@
 
 struct Hint {
     let letter: Letter
-    let location: Int?
+    var location: Int?
     
     init(letter: Letter, location: Int? = nil) {
         self.letter = letter

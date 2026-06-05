@@ -12,8 +12,8 @@ struct SettingsSheet: View {
     
     @AppStorage("hardMode") var hardMode: Bool = false
     
-    @Environment(ColorManager.self) var colorManager: ColorManager
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(ColorManager.self) var colorManager
+    @Environment(GameRunner.self) var gameRunner
     
     var body: some View {
         @Bindable var colorManager = colorManager

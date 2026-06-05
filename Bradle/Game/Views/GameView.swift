@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct GameView: View {
-    @EnvironmentObject var gameRunner: GameRunner
-    @Environment(ColorManager.self) var colorManager: ColorManager
+    @Environment(GameRunner.self) var gameRunner
+    @Environment(ColorManager.self) var colorManager
     
     var body: some View {
         ZStack {
@@ -32,8 +32,6 @@ struct GameView: View {
                 
                 Spacer()
                 
-                
-                
                 AttemptsView()
                     .containerRelativeFrame([.horizontal, .vertical]) { size, axis in
                         size * (axis == .horizontal ? 0.85 : 0.5)
@@ -54,8 +52,8 @@ struct GameView: View {
                 }
             }
             
-            if gameRunner.shouldShowAlert {
-                Text(gameRunner.alertMessage.string)
+            if let alertMessage = gameRunner.alertMessage?.string {
+                Text(alertMessage)
                     .font(.custom(FontNames.bold, size: 15))
                     .foregroundStyle(colorManager.secondary)
                     .padding(.horizontal, 10)
@@ -69,13 +67,15 @@ struct GameView: View {
                     .zIndex(1)
             }
         }
+        .task {
+            gameRunner.getTargetWord()
+        }
         .background(colorManager.gameBackground)
-        .environmentObject(gameRunner)
     }
 }
 
 #Preview {
     GameView()
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
         .environment(ColorManager())
 }

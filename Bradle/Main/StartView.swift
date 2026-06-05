@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StartView: View {
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(GameRunner.self) var gameRunner
     
     var body: some View {
         ZStack {
@@ -36,7 +36,7 @@ struct StartView: View {
                 
                 // Get 6 chances to guess a
                 // 5-letter word.
-                Text("Get 6 chances to guess a\n 5-letter word.")
+                Text(messageString)
                     .lineSpacing(8)
                     .multilineTextAlignment(.center)
                     .font(.custom(FontNames.cowboy, size: 20))
@@ -49,8 +49,10 @@ struct StartView: View {
                 }
                 
                 // Log in
-                BradleButton("Log in") {
-                    gameRunner.sheet = .login
+                if gameRunner.account == nil {
+                    BradleButton("Log in") {
+                        gameRunner.sheet = .login
+                    }
                 }
                 
                 // Subscribe
@@ -72,9 +74,21 @@ struct StartView: View {
     }
 }
 
+extension StartView {
+    var messageString: String {
+        if let account = gameRunner.account {
+            print(account)
+            if account.currentStreak > 0 {
+                return "Go ahead, add another day to\nyour **\(account.currentStreak) day** streak."
+            }
+        }
+        return "Get 6 chances to guess a\n 5-letter word."
+    }
+}
+
 #Preview {
     StartView()
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
 }
 
 struct BradleButton: View {

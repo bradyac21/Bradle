@@ -9,17 +9,19 @@ import SwiftUI
 
 struct PostgameButtons: View {
     
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(GameRunner.self) var gameRunner
     @Environment(ColorManager.self) var colorManager
     
     var body: some View {
         VStack {
-            PostgameButton(label: "See results", fill: false) {
-                gameRunner.fullScreenCover = .results
+            if let account = gameRunner.account {
+                PostgameButton(label: "See results", fill: false) {
+                    gameRunner.fullScreenCover = .results(account)
+                }
+                
+                Spacer()
+                    .frame(height: 10)
             }
-            
-            Spacer()
-                .frame(height: 10)
             
             PostgameButton(label: "Play the Bradle Archive", fill: false) {
                 // TODO: Implement Bradle Archive
@@ -33,7 +35,7 @@ struct PostgameButtons: View {
     ZStack {
         BradleColors.darkModeBackground.ignoresSafeArea()
         PostgameButtons()
-            .environmentObject(GameRunner())
+            .environment(GameRunner())
             .environment(ColorManager())
     }
 }

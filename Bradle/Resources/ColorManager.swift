@@ -99,7 +99,6 @@ extension Dictionary where Key == CurrentStatus, Value == Color {
         get {
             self[status] ?? .clear
         }
-
     }
 }
 
@@ -108,7 +107,6 @@ extension Dictionary where Key == SubmittedStatus?, Value == Color  {
         get {
             self[status] ?? .clear
         }
-
     }
 }
 

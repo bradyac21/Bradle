@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HeaderView: View {
     
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(GameRunner.self) var gameRunner
     @Environment(ColorManager.self) var colorManager
     
     public var body: some View {
@@ -36,6 +36,6 @@ struct HeaderView: View {
 #Preview {
     HeaderView()
         .background(BradleColors.darkModeBackground)
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
         .environment(ColorManager())
 }

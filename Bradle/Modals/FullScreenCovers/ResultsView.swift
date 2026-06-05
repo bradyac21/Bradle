@@ -10,6 +10,7 @@ import SwiftUI
 struct ResultsView: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
+    let account: BradleAccount
     
     // Pull from somewhere
     let stats = [Stat(8, "Played"), Stat(100, "Win %"), Stat(2, "Current Streak"), Stat(4, "Max Streak")]
@@ -55,9 +56,11 @@ struct ResultsView: View {
                                 
                 // Statistics
                 HStack(alignment: .center) {
-                    ForEach(stats, id: \.self) { stat in
-                        StatView(stat: stat)
-                    }
+                    StatView(stat: Stat(account.gamesPlayed, "Played"))
+                    StatView(stat: Stat(account.winPercent, "Win %"))
+                    StatView(stat: Stat(account.currentStreak, "Current Streak"))
+                    StatView(stat: Stat(account.maxStreak, "Max Streal"))
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
                 
@@ -69,7 +72,7 @@ struct ResultsView: View {
                     Spacer()
                 }
                 
-                GuessDistView()
+                GuessDistView(account: account)
                 
                 // Wordle bot
                 
@@ -91,9 +94,9 @@ struct ResultsView: View {
 #Preview {
     GameView()
         .sheet(isPresented: .constant(true)) {
-            ResultsView()
+            ResultsView(account: BradleAccount(username: "Hello", password: "username"))
         }
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
         .environment(ColorManager())
 }
 
@@ -127,8 +130,7 @@ struct StatView: View {
 struct GuessDistView: View {
     
     let recentGuess = 3
-    @State var account = BradleAccount()
-    @State var histogram = [Int: Int]()
+    var account: BradleAccount
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -141,7 +143,7 @@ struct GuessDistView: View {
                     Rectangle()
                         .fill(index == recentGuess ? BradleColors.green : BradleColors.darkModeFilledBorder)
                         .containerRelativeFrame(.horizontal) { width, _ in
-                            if let indexWinTotal = histogram[index], let histMax = histogram.values.max() {
+                            if let indexWinTotal = account.guessDistribution[index], let histMax = account.guessDistribution.values.max() {
                                 let factor = Float(indexWinTotal) / (Float(histMax) * 1.25)
                                 return width * CGFloat(factor)
                             } else {
@@ -150,7 +152,7 @@ struct GuessDistView: View {
                         }
                         
                         .overlay {
-                            Text((histogram[index] ?? 0).description)
+                            Text((account.guessDistribution[index] ?? 0).description)
                                 .font(.system(size: 15))
                                 .padding(.trailing, 6)
                                 .padding(.bottom, 1)
@@ -162,8 +164,5 @@ struct GuessDistView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .onAppear {
-            histogram = account.getGuessDistribution()
-        }
     }
 }

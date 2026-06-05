@@ -16,7 +16,7 @@ struct GameOverView: View {
     let gameOverCase: GameOverCase
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(GameRunner.self) var gameRunner
     
     var body: some View {
         ZStack {
@@ -128,5 +128,5 @@ struct GameOverView: View {
 
 #Preview {
     GameOverView(gameOverCase: .fail)
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
 }
