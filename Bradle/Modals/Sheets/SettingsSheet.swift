@@ -14,6 +14,7 @@ struct SettingsSheet: View {
     
     @Environment(ColorManager.self) var colorManager
     @Environment(GameRunner.self) var gameRunner
+    @State var isShowingLogOutAlert = false
     
     var body: some View {
         @Bindable var colorManager = colorManager
@@ -29,12 +30,12 @@ struct SettingsSheet: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        Button(action: {
+                        
+                        Button("Close", systemImage: "xmark") {
                             dismiss()
-                        }, label: {
-                            Image(systemName: "xmark")
-                        })
-                        .buttonStyle(.plain)
+                        }
+                        .labelStyle(.iconOnly)
+                        
                     }
                     Text("SETTINGS")
                         .font(.custom(FontNames.bold, size: 20))
@@ -83,10 +84,35 @@ struct SettingsSheet: View {
                 Divider()
                     .background(BradleColors.darkModeNotIncluded)
                 
+                if gameRunner.account != nil {
+                    HStack {
+                        Text("Log Out")
+                            .font(.custom(FontNames.medium, size: 20))
+                        Spacer()
+                        Button("Log Out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
+                            isShowingLogOutAlert = true
+                        }
+                        .disabled(gameRunner.account == nil)
+                        .scaleEffect(1.3)
+                        .padding(.trailing)
+                        .labelStyle(.iconOnly)
+                    }
+                    .padding(.vertical)
+                    Divider()
+                        .background(BradleColors.darkModeNotIncluded)
+                }
+                
             }
             .padding(.vertical, 20)
             .padding(.horizontal, 25)
             .foregroundStyle(colorManager.primary)
+        }
+        .alert("Are you sure?", isPresented: $isShowingLogOutAlert) {
+            Button("Yes", role: .destructive) {
+                gameRunner.logout()
+            }
+        } message: {
+            Text("Current Wordle game progress will be lost.")
         }
     }
 }
@@ -99,5 +125,6 @@ struct SettingsSheet: View {
         SettingsSheet()
             .presentationDetents([.fraction(0.4)])
             .environment(ColorManager())
+            .environment(GameRunner())
     }
 }

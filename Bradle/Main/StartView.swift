@@ -31,15 +31,16 @@ struct StartView: View {
                 
                 // Bradle title
                 Text("Bradle")
-                    .font(.custom(FontNames.mainTitle, size: 30))
-                    .padding(.vertical, 10)
+                    .font(.custom(FontNames.mainTitle, size: 35))
+                    .padding(.bottom, 5)
                 
                 // Get 6 chances to guess a
                 // 5-letter word.
+                
                 Text(messageString)
-                    .lineSpacing(8)
+                    .lineSpacing(0)
                     .multilineTextAlignment(.center)
-                    .font(.custom(FontNames.cowboy, size: 20))
+                    .font(.custom(FontNames.mediumFancy, size: 22.5))
                     .padding(.bottom)
                 
                 
@@ -70,16 +71,27 @@ struct StartView: View {
                 
                 Spacer()
             }
+            .foregroundStyle(.black)
         }
     }
 }
 
 extension StartView {
-    var messageString: String {
+    var messageString: AttributedString {
         if let account = gameRunner.account {
             print(account)
             if account.currentStreak > 0 {
-                return "Go ahead, add another day to\nyour **\(account.currentStreak) day** streak."
+                var attributed = AttributedString("Go ahead, add another day to\nyour \(account.currentStreak) day streak.")
+                for (range, char) in zip(attributed.characters.indices, attributed.characters) {
+                    if char == " " {
+                        let attrRange = range..<attributed.characters.index(after: range)
+                        attributed[attrRange].kern = -3
+                    }
+                }
+                if let range = attributed.range(of: "\(account.currentStreak) day") {
+                    attributed[range].font = .custom("Hanuman-ExtraBold", size: 22)
+                }
+                return attributed
             }
         }
         return "Get 6 chances to guess a\n 5-letter word."

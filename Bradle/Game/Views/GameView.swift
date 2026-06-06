@@ -52,8 +52,8 @@ struct GameView: View {
                 }
             }
             
-            if let alertMessage = gameRunner.alertMessage?.string {
-                Text(alertMessage)
+            if let alertMessage = gameRunner.alertMessage {
+                Text(alertMessage.string)
                     .font(.custom(FontNames.bold, size: 15))
                     .foregroundStyle(colorManager.secondary)
                     .padding(.horizontal, 10)

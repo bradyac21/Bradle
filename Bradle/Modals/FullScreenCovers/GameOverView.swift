@@ -61,17 +61,15 @@ struct GameOverView: View {
                 Button(action: {
                     print("Share tapped")
                 }, label: {
-                    HStack {
-                        Text("Create a free account")
-                            .kerning(1)
-                            .foregroundStyle(.primary)
-                            .fontWeight(.semibold)
-                            .font(.custom(FontNames.bold, size: 15))
-                    }
-                    .padding(.horizontal, 60)
-                    .padding(.vertical, 15)
-                    .background {
-                        Capsule()
+                    Text("Create a free account")
+                        .kerning(1)
+                        .foregroundStyle(.primary)
+                        .fontWeight(.semibold)
+                        .font(.custom(FontNames.bold, size: 15))
+                        .padding(.horizontal, 60)
+                        .padding(.vertical, 15)
+                        .background {
+                            Capsule()
                             .foregroundStyle(.white)
                     }
                 })
@@ -94,9 +92,7 @@ struct GameOverView: View {
                     .frame(height: 40)
                 
                 // Share Button
-                Button(action: {
-                    print("Share tapped")
-                }, label: {
+                ShareLink(item: gameRunner.textRepresentation()) {
                     HStack {
                         Text("Share")
                             .foregroundStyle(.white)
@@ -112,8 +108,28 @@ struct GameOverView: View {
                         Capsule()
                             .foregroundStyle(.green)
                     }
-                })
-                .buttonStyle(.plain)
+                }
+                
+//                Button(action: {
+//                    print("Share tapped")
+//                }, label: {
+//                    HStack {
+//                        Text("Share")
+//                            .foregroundStyle(.white)
+//                            .kerning(1)
+//                            .font(.custom(FontNames.bold, size: 17.5))
+//                        Image(systemName: "square.and.arrow.up")
+//                            .foregroundStyle(.white)
+//                        
+//                    }
+//                    .padding(.horizontal, 60)
+//                    .padding(.vertical, 10)
+//                    .background {
+//                        Capsule()
+//                            .foregroundStyle(.green)
+//                    }
+//                })
+//                .buttonStyle(.plain)
                 Spacer()
             }
         }

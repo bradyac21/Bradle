@@ -55,6 +55,20 @@ class GameRunner {
         self.currentAttempt = CurrentAttempt()
     }
     
+    func logout() {
+        account?.rememberMe = false
+        account = nil
+        
+        self.keyboardManager = KeyboardManager()
+        self.submittedAttempts = [SubmittedAttempt]()
+        self.currentAttempt = CurrentAttempt()
+        
+        self.hints = []
+        self.targetWord = nil
+        self.sheet = nil
+        self.location = .start
+    }
+    
     public func getTargetWord() {
         // Assign target word to random word
         if let account, !Calendar.current.isDateInToday(account.lastWonGameDate) {
@@ -265,5 +279,21 @@ class GameRunner {
                 hints[hintIndex].location = index
             }
         }
+    }
+    
+    func textRepresentation() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM"
+        let today = formatter.string(from: Date.now)
+        
+        var result = "Bradle \(today)\n\n"
+        for attempt in submittedAttempts {
+            for status in attempt.statuses {
+                result += status.emoji
+            }
+            result += "\n"
+        }
+        
+        return result
     }
 }

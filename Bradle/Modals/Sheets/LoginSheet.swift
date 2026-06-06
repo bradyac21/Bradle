@@ -126,8 +126,9 @@ struct LoginTextField: View {
             
             TextField("", text: $entry)
                 .containerRelativeFrame(.vertical) { height, _ in
-                    height * 0.075
+                    height * 0.06
                 }
+                .padding(5)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(.white, lineWidth: 1)
@@ -167,8 +168,10 @@ class LoginViewModel {
             }
             
             gameRunner.account = account
+            print("Logged in to account.")
             
         } else {
+            // Ensure username isn't taken
             guard account == nil else {
                 error = .usernameTaken
                 throw URLError(.badURL)
@@ -176,7 +179,8 @@ class LoginViewModel {
             
             let newAccount = BradleAccount(username: username, password: password)
             context.insert(newAccount)
-            gameRunner.account = account
+            gameRunner.account = newAccount
+            print("Account created")
         }
     }
     
