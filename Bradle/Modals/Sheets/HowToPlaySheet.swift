@@ -14,48 +14,34 @@ struct HowToPlaySheet: View {
     var body: some View {
         VStack {
             
-            // X button
-            HStack {
-                Spacer()
-                
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark")
-                }
-                .padding()
+            Button("Dismiss", systemImage: "xmark") {
+                dismiss()
             }
+            .frame(maxWidth: .infinity, alignment: .trailing)
             
             VStack(alignment: .leading) {
                 
-                // How to play
                 Text("How To Play")
                     .font(.custom(FontNames.mainTitle, size: 30))
+                    .padding(.bottom, 12)
                 
-                // Guess the bradle in 6 tries
                 Text("Guess the Bradle in 6 tries.")
                     .font(.custom(FontNames.cowboy, size: 17))
-                    .padding(.top, -12)
                 
-                // 2 bullet points
                 BulletPoint(text: "Each guess must be a valid 5-letter word.")
                 BulletPoint(text: "The color of the tiles will change to show\n   how close your guess was to the word.")
                 
-                // Examples label
                 Text("Examples")
                     .font(.custom(FontNames.bold, size: 15))
                     .padding(.top, 5)
 
-                // WORDY
-                WordyExampleWord(colorManager: colorManager)
+                WordyExampleWord()
                 ExampleWordMessage(letter: .W, message: "is in the word and in the correct spot.")
 
-                // LIGHT
-                LightExampleWord(colorManager: colorManager)
+                LightExampleWord()
                 ExampleWordMessage(letter: .I, message: "is in the word but in the wrong spot.")
 
-                // ROGUE
-                RogueExampleWord(colorManager: colorManager)
+                RogueExampleWord()
                 ExampleWordMessage(letter: .U, message: "is not in the word in any spot.")
  
                 // divider
@@ -137,38 +123,30 @@ private struct ExampleWordMessage: View {
 }
 
 private struct WordyExampleWord: View {
-    @Bindable var colorManager: ColorManager
-    
-    init(colorManager: ColorManager) {
-        self._colorManager = Bindable(colorManager)
-    }
+    @Environment(ColorManager.self) var colorManager
     
     var body: some View {
             HStack {
-                SubmittedLetterView(letter: .W, status: .correct, index: 0, colorManager: colorManager)
-                CurrentLetterView(letter: .O)
-                CurrentLetterView(letter: .R)
-                CurrentLetterView(letter: .D)
-                CurrentLetterView(letter: .Y)
+                SubmittedLetterView(letter: .W, letterSize: 25, status: .correct, index: 0, colorManager: colorManager)
+                CurrentLetterView(letter: .O, letterSize: 25)
+                CurrentLetterView(letter: .R, letterSize: 25)
+                CurrentLetterView(letter: .D, letterSize: 25)
+                CurrentLetterView(letter: .Y, letterSize: 25)
             }
             .frame(width: 200)
     }
 }
 
 private struct LightExampleWord: View {
-    @Bindable var colorManager: ColorManager
-    
-    init(colorManager: ColorManager) {
-        self._colorManager = Bindable(colorManager)
-    }
+    @Environment(ColorManager.self) var colorManager
     
     var body: some View {
         HStack {
-            CurrentLetterView(letter: .L)
-            SubmittedLetterView(letter: .I, status: .included, index: 0, colorManager: colorManager)
-            CurrentLetterView(letter: .G)
-            CurrentLetterView(letter: .H)
-            CurrentLetterView(letter: .T)
+            CurrentLetterView(letter: .L, letterSize: 25)
+            SubmittedLetterView(letter: .I, letterSize: 25, status: .included, index: 0, colorManager: colorManager)
+            CurrentLetterView(letter: .G, letterSize: 25)
+            CurrentLetterView(letter: .H, letterSize: 25)
+            CurrentLetterView(letter: .T, letterSize: 25)
         }
         .frame(width: 200)
         
@@ -176,19 +154,15 @@ private struct LightExampleWord: View {
 }
 
 private struct RogueExampleWord: View {
-    @Bindable var colorManager: ColorManager
-    
-    init(colorManager: ColorManager) {
-        self._colorManager = Bindable(colorManager)
-    }
+    @Environment(ColorManager.self) var colorManager
     
     var body: some View {
         HStack {
-            CurrentLetterView(letter: .R)
-            CurrentLetterView(letter: .O)
-            CurrentLetterView(letter: .G)
-            SubmittedLetterView(letter: .U, status: .notIncluded, index: 0, colorManager: colorManager)
-            CurrentLetterView(letter: .E)
+            CurrentLetterView(letter: .R, letterSize: 25)
+            CurrentLetterView(letter: .O, letterSize: 25)
+            CurrentLetterView(letter: .G, letterSize: 25)
+            SubmittedLetterView(letter: .U, letterSize: 25, status: .notIncluded, index: 0, colorManager: colorManager)
+            CurrentLetterView(letter: .E, letterSize: 25)
         }
         .frame(width: 200)
         

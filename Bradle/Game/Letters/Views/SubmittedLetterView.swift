@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct SubmittedLetterView: View {
+    var letter: Letter
+    let letterSize: CGFloat
+    var status: SubmittedStatus
+    var index: CGFloat
     @State var flipTrigger: Bool = false
     @State var color: Color = .clear
     @State var borderColor: Color
     @State var letterColor: Color = .white
-    var letter: Letter
-    var status: SubmittedStatus
-    var index: CGFloat
     
     @Environment(GameRunner.self) var gameRunner
     @Bindable var colorManager: ColorManager
     
-    init(letter: Letter, status: SubmittedStatus, index: Int, colorManager: ColorManager) {
+    init(letter: Letter, letterSize: CGFloat = Constants.letterSize, status: SubmittedStatus, index: Int, colorManager: ColorManager) {
         self.letter = letter
+        self.letterSize = letterSize
         self.status = status
         self.index = CGFloat(index)
         self.borderColor = colorManager.currentStatusBorderColors[safeKey: .filled]

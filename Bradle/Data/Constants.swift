@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-public struct Constants {
+public enum Constants {
     static let letterSize: CGFloat = 35
+    static let howToPlayLetterSize: CGFloat = 25
     static let words = [
         "ABACK",
         "ABAFT",

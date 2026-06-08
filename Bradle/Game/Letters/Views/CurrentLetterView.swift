@@ -9,12 +9,17 @@ import SwiftUI
 
 struct CurrentLetterView: View {    
     var letter: Letter
+    let letterSize: CGFloat
     @State var shouldPop: Bool = false
     @State var borderColor: Color = .clear
     @State var status: CurrentStatus = .empty
     
     @Environment(ColorManager.self) var colorManager
-    @Environment(GameRunner.self) var gameRunner
+    
+    init(letter: Letter, letterSize: CGFloat = Constants.letterSize) {
+        self.letter = letter
+        self.letterSize = letterSize
+    }
 
     public var body: some View {
         ZStack {
@@ -25,7 +30,7 @@ struct CurrentLetterView: View {
                 .popAnimation(trigger: shouldPop)
             
             Text(letter.rawValue)
-                .font(.custom(FontNames.bold, size: Constants.letterSize))
+                .font(.custom(FontNames.bold, size: letterSize))
                 .foregroundStyle(colorManager.primary)
                 .padding(.bottom, 5)
         }
