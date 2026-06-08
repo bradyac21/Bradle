@@ -12,7 +12,6 @@ enum AlertMessage {
     case notEnoughLetters
     case fail
     case word(String)
-    case empty
     case cannotEnableHardMode
     
     case unsatisfiedHint(Hint)
@@ -31,7 +30,6 @@ enum AlertMessage {
         case .notEnoughLetters: "Not Enough Letters"
         case .fail: "Maybe next time"
         case .word(let word): word
-        case .empty: ""
             
         case .cannotEnableHardMode: "Hard mode can only be enabled at the start of a round"
             

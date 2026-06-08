@@ -11,4 +11,15 @@ enum SubmittedStatus: CaseIterable {
     case notIncluded
     case included
     case correct
+    
+    var emoji: String {
+        switch self {
+        case .notIncluded:
+            return "⬛"
+        case .included:
+            return "🟨"
+        case .correct:
+            return "🟩"
+        }
+    }
 }

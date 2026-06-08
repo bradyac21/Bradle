@@ -9,13 +9,14 @@ import SwiftUI
 
 struct PostgameButtons: View {
     
-    @EnvironmentObject var gameRunner: GameRunner
     @Environment(ColorManager.self) var colorManager
     
     var body: some View {
         VStack {
+            
+            // TODO: Need to get the case somehow
             PostgameButton(label: "See results", fill: false) {
-                gameRunner.fullScreenCover = .results
+                AppState.shared.fullScreenCover = .results(.fail)
             }
             
             Spacer()
@@ -33,7 +34,7 @@ struct PostgameButtons: View {
     ZStack {
         BradleColors.darkModeBackground.ignoresSafeArea()
         PostgameButtons()
-            .environmentObject(GameRunner())
+            .environment(GameRunner())
             .environment(ColorManager())
     }
 }

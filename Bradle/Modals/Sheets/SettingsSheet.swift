@@ -12,8 +12,9 @@ struct SettingsSheet: View {
     
     @AppStorage("hardMode") var hardMode: Bool = false
     
-    @Environment(ColorManager.self) var colorManager: ColorManager
-    @EnvironmentObject var gameRunner: GameRunner
+    @Environment(ColorManager.self) var colorManager
+    @Environment(GameRunner.self) var gameRunner
+    @State var isShowingLogOutAlert = false
     
     var body: some View {
         @Bindable var colorManager = colorManager
@@ -27,15 +28,12 @@ struct SettingsSheet: View {
                 // MARK: Settings Sheet Header
                 
                 ZStack {
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            dismiss()
-                        }, label: {
-                            Image(systemName: "xmark")
-                        })
-                        .buttonStyle(.plain)
+                    Button("Close", systemImage: "xmark") {
+                        dismiss()
                     }
+                    .labelStyle(.iconOnly)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    
                     Text("SETTINGS")
                         .font(.custom(FontNames.bold, size: 20))
                 }
@@ -83,10 +81,34 @@ struct SettingsSheet: View {
                 Divider()
                     .background(BradleColors.darkModeNotIncluded)
                 
+                if AccountStore.isLoggedIn {
+                    HStack {
+                        Text("Log Out")
+                            .font(.custom(FontNames.medium, size: 20))
+                        Spacer()
+                        Button("Log Out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
+                            isShowingLogOutAlert = true
+                        }
+                        .scaleEffect(1.3)
+                        .padding(.trailing)
+                        .labelStyle(.iconOnly)
+                    }
+                    .padding(.vertical)
+                    Divider()
+                        .background(BradleColors.darkModeNotIncluded)
+                }
             }
-            .padding(.vertical, 20)
+            .padding(.top, 20)
+            .padding(.bottom, 10)
             .padding(.horizontal, 25)
             .foregroundStyle(colorManager.primary)
+        }
+        .alert("Are you sure?", isPresented: $isShowingLogOutAlert) {
+            Button("Yes", role: .destructive) {
+                gameRunner.logout()
+            }
+        } message: {
+            Text("Current Wordle game progress will be lost.")
         }
     }
 }
@@ -97,7 +119,8 @@ struct SettingsSheet: View {
     }
     .sheet(isPresented: .constant(true)) {
         SettingsSheet()
-            .presentationDetents([.fraction(0.4)])
+            .presentationDetents([.fraction(AccountStore.isLoggedIn ? 0.45 : 0.4)])
             .environment(ColorManager())
+            .environment(GameRunner())
     }
 }

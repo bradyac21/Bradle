@@ -47,7 +47,7 @@ class ColorManager {
             self.secondary = .black
         } else {
             self.gameBackground = BradleColors.lightModeBackground
-            self.defaultBackground = BradleColors.light
+            self.defaultBackground = .white
             
             self.primary = .black
             self.secondary = .white
@@ -99,7 +99,6 @@ extension Dictionary where Key == CurrentStatus, Value == Color {
         get {
             self[status] ?? .clear
         }
-
     }
 }
 
@@ -108,7 +107,6 @@ extension Dictionary where Key == SubmittedStatus?, Value == Color  {
         get {
             self[status] ?? .clear
         }
-
     }
 }
 

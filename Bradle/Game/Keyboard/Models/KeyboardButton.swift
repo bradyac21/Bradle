@@ -46,13 +46,14 @@ enum KeyboardButton: String, CaseIterable, Hashable {
     // MARK: - Variables
     
     /// The View the appears on the Keyboard for a key
-    public var icon: AnyView {
+    @ViewBuilder
+    public var icon: some View {
         if self == .backspace {
-            AnyView(Image(systemName: "delete.left"))
+            Image(systemName: "delete.left")
         } else if self == .enter {
-            AnyView(Text(self.rawValue).font(.custom(FontNames.bold, size: 12)))
+            Text(self.rawValue).font(.custom(FontNames.bold, size: 14))
         } else {
-            AnyView(Text(self.rawValue).font(.custom(FontNames.bold, size: 20)))
+            Text(self.rawValue).font(.custom(FontNames.bold, size: 22))
         }
     }
     

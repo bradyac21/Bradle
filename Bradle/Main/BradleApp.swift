@@ -6,16 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct BradleApp: App {
-    @StateObject var gameRunner = GameRunner()
+    @State var gameRunner = GameRunner()
     @State var colorManager = ColorManager()
+    @Bindable var appState = AppState.shared
+    let container = try! ModelContainer(for: BradleAccount.self)
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                switch gameRunner.location {
+                switch appState.location {
                 case .start:
                     StartView()
                         .transition(.opacity)
@@ -24,21 +27,31 @@ struct BradleApp: App {
                         .transition(.opacity)
                 }
             }
-            // Handles transition from StartView to GameView
-            .animation(.easeInOut, value: gameRunner.location)
-            .fullScreenCover(isPresented: $gameRunner.showFullScreenCover) {
-                if gameRunner.fullScreenCover == .victory {
-                    gameRunner.hideKeyboard = true
-                }
-            } content: {
-                gameRunner.fullScreenCover.screen
+            .onAppear {
+                AccountStore.shared.loadAccount(from: container.mainContext)
+                print("loading account")
             }
-            .sheet(isPresented: $gameRunner.showSheet) {
-                gameRunner.sheet.screen
+            
+            // Handles transition from StartView to GameView
+            .animation(.easeInOut, value: appState.location)
+            .fullScreenCover(item: $appState.fullScreenCover) { cover in
+                cover.screen
+            }
+            .sheet(item: $appState.sheet) { sheet in
+                sheet.screen
                     .presentationCornerRadius(12)
             }
+            #if DEBUG
+            .simultaneousGesture(
+                TapGesture(count: 3)
+                    .onEnded {
+                        AppState.shared.fullScreenCover = .testing
+                    }
+            )
+            #endif
         }
-        .environmentObject(gameRunner)
+        .modelContainer(container)
+        .environment(gameRunner)
         .environment(colorManager)
     }
 }

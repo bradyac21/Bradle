@@ -10,15 +10,23 @@ import SwiftUI
 
 struct DevelopingView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(GameRunner.self) var gameRunner
     var body: some View {
         NavigationStack {
             Form {
-                List {
-                    NavigationLink("Rounded Rectangle", destination: RoundedRectangleView())
-                    NavigationLink("Bradle Colors", destination: BradleColorsView())
-                    NavigationLink("Status Color", destination: StatusColorView())
-                    NavigationLink("Status Borders", destination: StatusBorderView())
-                    NavigationLink("Testing Tiles", destination: LetterVariants())
+                Section("Management") {
+                    List {
+                        NavigationLink("Manage Accounts", destination: BradleAccountsView(context: gameRunner.modelContext))
+                    }
+                }
+                Section("Resources") {
+                    List {
+                        NavigationLink("Rounded Rectangle", destination: RoundedRectangleView())
+                        NavigationLink("Bradle Colors", destination: BradleColorsView())
+                        NavigationLink("Status Color", destination: StatusColorView())
+                        NavigationLink("Status Borders", destination: StatusBorderView())
+                        NavigationLink("Testing Tiles", destination: LetterVariants())
+                    }
                 }
             }
             .navigationTitle("Components and Colors")
@@ -38,6 +46,8 @@ struct DevelopingView: View {
 
 #Preview {
     DevelopingView()
+        .environment(ColorManager())
+        .environment(GameRunner())
 }
 
 extension View {

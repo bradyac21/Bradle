@@ -42,6 +42,6 @@ struct SubmittedAttemptView: View {
 
 #Preview {
     SubmittedAttemptView(for: SubmittedAttempt())
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
         .environment(ColorManager())
 }

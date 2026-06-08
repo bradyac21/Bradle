@@ -12,52 +12,63 @@ enum AppLocation {
     case game
 }
 
-enum FullScreenCover {
-    case victory
-    case results
-    case empty
+enum FullScreenCover: Identifiable, Equatable {
+    case results(GameOverCase)
     
     #if DEBUG
     case testing
     #endif
     
+    var id: Int {
+        switch self {
+        case .results(_): 0
+            #if DEBUG
+        case .testing: 1
+            #endif
+        }
+    }
+    
+    @ViewBuilder
     var screen: some View {
         switch self {
-        case .victory:
-            AnyView(GameOverView(gameOverCase: .victory))
-        case .results:
-            AnyView(ResultsView())
-        case .empty:
-            AnyView(EmptyView())
+        case .results(let gameOverCase):
+            ResultsView(gameOverCase: gameOverCase)
+            
         #if DEBUG
         case .testing:
-            AnyView(DevelopingView())
+            DevelopingView()
         #endif
         }
     }
 }
 
-enum BradleSheet {
-    case login
-    case empty
+enum BradleSheet: Identifiable, Equatable {
+    case login(UseCase)
     case howToPlay
     case settings
     
+    var id: Int {
+        switch self {
+        case .login(_):
+            return 0
+        case .howToPlay:
+            return 1
+        case .settings:
+            return 2
+        }
+    }
+    
+    @ViewBuilder
     var screen: some View {
         switch self {
-        case .login:
-            AnyView(LogInSheet())
-        case .empty:
-            AnyView(EmptyView())
+        case .login(let useCase):
+            LoginSheet(useCase: useCase)
         case .howToPlay:
-            AnyView(HowToPlaySheet()
+            HowToPlaySheet()
                 .presentationDetents([.large])
-            )
         case .settings:
-            AnyView(
-                SettingsSheet()
-                    .presentationDetents([.fraction(0.4)])
-            )
+            SettingsSheet()
+                .presentationDetents([.fraction(AccountStore.isLoggedIn ? 0.45 : 0.4)])
         }
     }
 }

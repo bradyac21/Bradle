@@ -34,5 +34,5 @@ struct KeyboardView: View {
 
 #Preview {
     KeyboardView()
-        .environmentObject(GameRunner())
+        .environment(GameRunner())
 }

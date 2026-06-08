@@ -13,8 +13,8 @@ struct KeyView: View {
     @State var status: SubmittedStatus? = nil
     
     @Environment(ColorManager.self) var colorManager
-    @EnvironmentObject var gameRunner: GameRunner
-    
+    @Environment(GameRunner.self) var gameRunner
+
     public var body: some View {
         Button {
             gameRunner.handlePress(from: key)
@@ -25,6 +25,7 @@ struct KeyView: View {
                 
                 key.icon
                     .foregroundStyle(colorManager[safeKey: status])
+                    .padding(.bottom, 3) // Centers letter b
                     .animation(.easeIn, value: key)
             }
         }
@@ -39,6 +40,6 @@ struct KeyView: View {
 
 #Preview {
     KeyView(key: KeyboardButton.A)
-       .environmentObject(GameRunner())
+       .environment(GameRunner())
        .environment(ColorManager())
 }

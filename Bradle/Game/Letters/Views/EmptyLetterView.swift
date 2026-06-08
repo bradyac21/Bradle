@@ -14,7 +14,7 @@ struct EmptyLetterView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 1)
                 .fill(.clear)
-                .border(colorManager.darkModeEnabled ? BradleColors.darkModeEmptyBorder : BradleColors.lightModeEmptyBorder)
+                .strokeBorder(colorManager.darkModeEnabled ? BradleColors.darkModeEmptyBorder : BradleColors.lightModeEmptyBorder, lineWidth: 2)
                 .aspectRatio(1.0, contentMode: .fit)
         }
     }

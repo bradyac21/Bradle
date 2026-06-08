@@ -9,91 +9,131 @@ import SwiftUI
 
 struct ResultsView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(GameRunner.self) var gameRunner
     @AppStorage("darkModeEnabled") var darkModeEnabled: Bool = true
-    
-    // Pull from somewhere
-    let stats = [Stat(8, "Played"), Stat(100, "Win %"), Stat(2, "Current Streak"), Stat(4, "Max Streak")]
+    let gameOverCase: GameOverCase
     
     var body: some View {
-        ZStack {
-            darkModeEnabled ? BradleColors.darkModeBackground.ignoresSafeArea() : BradleColors.lightModeBackground.ignoresSafeArea()
+        ScrollView {
             
-            VStack {
-                
-                // Dismiss buttons
-                HStack {
-                    Spacer()
-                    
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Back to puzzle")
-                            .bold()
-                        Image(systemName: "xmark")
-                            .padding(.leading, 2)
+            Button("Back to puzzle", systemImage: "xmark") {
+                dismiss()
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.plain)
+            .foregroundStyle(darkModeEnabled ? .white : .black)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            
+            if !AccountStore.isLoggedIn {
+                Spacer()
+                    .containerRelativeFrame(.vertical) { height, _ in
+                        height * 0.15
                     }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(darkModeEnabled ? .white : .black)
-                }
-                
-                // Star thing
-                StarThing()
-                
-                // Congratulations
-                Text("Congratulations!")
-                    .font(.custom(FontNames.mainTitle, size: 30))
-                    .padding(.bottom, 5)
+            }
+            
+            StarThing()
+            
+            // Congratulations
+            Text(gameOverCase.title)
+                .font(.custom(FontNames.mainTitle, size: 40))
+                .padding(.bottom, 5)
+            
+            if !AccountStore.isLoggedIn {
+                Text(gameOverCase.body)
+                    .font(.custom(FontNames.mediumFancy, size: 20))
+                    .kerning(1)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 10)
+            }
+            
+            
+            if let account = AccountStore.shared.account {
                 
                 // Stats label
-                HStack {
-                    Text("STATISTICS")
-                        .font(.custom(FontNames.bold, size: 15))
-                    
-                    Spacer()
-                }
-                .padding(.bottom, 10)
-                                
+                Text("STATISTICS")
+                    .font(.custom(FontNames.bold, size: 15))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 10)
+                
                 // Statistics
                 HStack(alignment: .center) {
-                    ForEach(stats, id: \.self) { stat in
-                        StatView(stat: stat)
-                    }
+                    StatView(stat: Stat(account.gamesPlayed, "Played"))
+                    StatView(stat: Stat(account.winPercent, "Win %"))
+                    StatView(stat: Stat(account.currentStreak, "Current Streak"))
+                    StatView(stat: Stat(account.maxStreak, "Max Streak"))
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom)
                 
-                // Guess Distribution
-                HStack {
-                    Text("GUESS DISTRIBUTION")
-                        .font(.custom(FontNames.bold, size: 15))
-                    
-                    Spacer()
+                Text("GUESS DISTRIBUTION")
+                    .font(.custom(FontNames.bold, size: 15))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                
+                GuessDistView(recentGuess: gameRunner.recentGameGuessIndex)
+                    .padding(.bottom)
+                
+            } else {
+                BradleButton("Create a free account", fillColor: .white, size: .large) {
+                    AppState.shared.sheet = .login(.createAccount)
                 }
+                .font(.custom(FontNames.bold, size: 15))
+                .padding(.bottom, 10)
                 
-                GuessDistView()
                 
-                // Wordle bot
-                
-                // Custom puzzle, share
-                
-                // Share button
-                
-                // Explore wordle archive
+                Button("Already Registered? Log In") {
+                    AppState.shared.sheet = .login(.login)
+                }
+                .font(.custom(FontNames.bold, size: 17.5))
+                .underline()
+                .foregroundStyle(.white)
+                .buttonStyle(.plain)
                 
                 Spacer()
+                    .frame(height: 40)
             }
-            .foregroundStyle(darkModeEnabled ? .white : .black)
-            .padding()
             
+            ShareLink(item: gameRunner.textRepresentation()) {
+                HStack {
+                    Text("Share")
+                        .font(.custom(FontNames.bold, size: 17.5))
+                    Image(systemName: "square.and.arrow.up")
+                    
+                }
+            }
+            .buttonStyle(BradleButtonStyle(textColor: .white, fillColor: BradleColors.green))
+            .padding(.top, 20)
+            
+            Spacer()
+            
+            // Custom puzzle, share
+            
+            // Share button
+            
+            // Explore wordle archive
+            
+            Spacer()
         }
+        .foregroundStyle(darkModeEnabled ? .white : .black)
+        .padding()
+        .multilineTextAlignment(.center)
+        .background {
+            darkModeEnabled ? BradleColors.darkModeBackground.ignoresSafeArea() : BradleColors.lightModeBackground.ignoresSafeArea()
+        }
+        .onAppear {
+                    Task {
+                        try await Task.sleep(nanoseconds: 500_000_000)
+                        gameRunner.hideKeyboard = true
+                    }
+                }
     }
 }
 
 #Preview {
-    GameView()
-        .sheet(isPresented: .constant(true)) {
-            ResultsView()
-        }
-        .environmentObject(GameRunner())
+    ResultsView(gameOverCase: .fail)
+        .environment(GameRunner())
         .environment(ColorManager())
 }
 
@@ -112,10 +152,10 @@ struct StatView: View {
     var body: some View {
         VStack {
             Text(stat.value.description)
-                .font(.system(size: 30))
+                .font(.custom(FontNames.mediumFancy, size: 30))
                 .frame(height: 30)
             Text(stat.label)
-                .font(.custom(FontNames.normal, size: 10))
+                .font(.custom(FontNames.mediumFancy, size: 15))
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.center)
                 .frame(height: 40, alignment: .top)
@@ -126,34 +166,34 @@ struct StatView: View {
 
 struct GuessDistView: View {
     
-    let recentGuess = 3
-    @State var account = BradleAccount()
-    @State var histogram = [Int: Int]()
+    let recentGuess: Int?
+    var account: BradleAccount? = AccountStore.shared.account
     
     var body: some View {
         VStack(alignment: .leading) {
             ForEach(1..<7) { index in
                 HStack {
                     Text(index.description)
-                        .font(.system(size: 15))
+                        .font(.custom(FontNames.mediumFancy, size: 15))
                         .frame(width: 10)
                         .bold()
                     Rectangle()
                         .fill(index == recentGuess ? BradleColors.green : BradleColors.darkModeFilledBorder)
                         .containerRelativeFrame(.horizontal) { width, _ in
-                            if let indexWinTotal = histogram[index], let histMax = histogram.values.max() {
+                            if let indexWinTotal = account?.guessDistribution[index], let histMax = account?.guessDistribution.values.max() {
                                 let factor = Float(indexWinTotal) / (Float(histMax) * 1.25)
-                                return width * CGFloat(factor)
+                                return 10 + width * CGFloat(factor)
                             } else {
                                 return 20
                             }
                         }
-                        
+                    
                         .overlay {
-                            Text((histogram[index] ?? 0).description)
-                                .font(.system(size: 15))
+                            Text((account?.guessDistribution[index] ?? 0).description)
+                                .font(.custom(FontNames.mediumFancy, size: 15))
+                                .bold()
                                 .padding(.trailing, 6)
-                                .padding(.bottom, 1)
+                                .padding(.top, 1)
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                             
                         }
@@ -162,8 +202,23 @@ struct GuessDistView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .onAppear {
-            histogram = account.getGuessDistribution()
+    }
+}
+
+enum GameOverCase: Equatable {
+    case victory(Int), fail
+    
+    var title: String {
+        switch self {
+        case .victory: Strings.victoryTitle
+        case .fail: Strings.failTitle
+        }
+    }
+    
+    var body: String {
+        switch self {
+        case .victory: Strings.victoryBody
+        case .fail: Strings.failBody
         }
     }
 }

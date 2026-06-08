@@ -9,26 +9,28 @@ import SwiftUI
 
 struct HeaderView: View {
     
-    @EnvironmentObject var gameRunner: GameRunner
     @Environment(ColorManager.self) var colorManager
     
     public var body: some View {
         HStack {
-            Button {
-                gameRunner.sheet = .howToPlay
-            } label: {
-                Image(systemName: "questionmark.circle")
+            Button("How to Play", systemImage: "questionmark.circle") {
+                AppState.shared.sheet = .howToPlay
             }
+            
             Spacer()
+            
             Text("BRADLE")
                 .font(.custom(FontNames.bold, size: 17.5))
+            
             Spacer()
-            Button {
-                gameRunner.sheet = .settings
-            } label: {
-                Image(systemName: "gear")
+            
+            Button("Settings", systemImage: "gearshape.fill") {
+                AppState.shared.sheet = .settings
             }
+
         }
+        .labelStyle(.iconOnly)
+        .font(.system(size: 20))
         .foregroundStyle(colorManager.primary)
     }
 }
@@ -36,6 +38,5 @@ struct HeaderView: View {
 #Preview {
     HeaderView()
         .background(BradleColors.darkModeBackground)
-        .environmentObject(GameRunner())
         .environment(ColorManager())
 }
