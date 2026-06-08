@@ -9,11 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct LoginSheet: View {
-    @State var viewModel = LoginViewModel()
+    @State var viewModel: LoginViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
     @Environment(GameRunner.self) var gameRunner
+    
+    init(useCase: UseCase) {
+        self.viewModel = LoginViewModel(useCase: useCase)
+    }
     
     var body: some View {
         ZStack {
@@ -21,34 +25,26 @@ struct LoginSheet: View {
             
             VStack {
                 ZStack {
-                    HStack {
-                        Button(action: {
-                            dismiss()
-                        }, label: {
-                            Image(systemName: "xmark")
-                                .foregroundStyle(.gray)
-                        })
-                        .buttonStyle(.plain)
-                        .padding(.trailing)
-                        Spacer()
+                    Button("Dismiss", systemImage: "xmark") {
+                        dismiss()
                     }
-                    HStack {
-                        Spacer()
-                        Text("The New York Times")
-                            .font(.custom(FontNames.newYorkTimesFont, size: 20))
-                        Spacer()
-                    }
+                    .labelStyle(.iconOnly)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Text("The New York Times")
+                        .font(.custom(FontNames.newYorkTimesFont, size: 30))
+                        .frame(maxWidth: .infinity)
                 }
                 
                 Divider()
-                    .padding(.bottom, 25)
                     .frame(maxWidth: .infinity)
                     .frame(height: 1)
                     .background(BradleColors.light)
                 
                 Text("Log in or create an account")
                     .font(.custom(FontNames.bold, size: 20))
-                    .padding(.vertical, 7.5)
+                    .padding(.bottom, 7.5)
+                    .padding(.top, 20)
                 
                 LoginTextField(entry: $viewModel.username, label: "Username")
                     .padding(.bottom)
@@ -68,11 +64,12 @@ struct LoginSheet: View {
                 .foregroundStyle(BradleColors.dark)
                 .buttonStyle(.plain)
                 .containerRelativeFrame([.horizontal, .vertical]) { size, axe in
-                    size * (axe == .horizontal ? 0.9 : 0.075)
+                    size * (axe == .horizontal ? 0.75 : 0.06)
                 }
                 .background(.white)
                 .clipShape(.rect(cornerRadius: 5))
                 .disabled(viewModel.username.isEmpty || viewModel.password.isEmpty)
+                .padding(.top)
                 
                 
                 Button(viewModel.useCase.secondaryButtonLabel) {
@@ -105,7 +102,7 @@ struct LoginSheet: View {
 }
 
 #Preview {
-    LoginSheet()
+    LoginSheet(useCase: .login)
         .environment(GameRunner())
         .modelContainer(for: BradleAccount.self)
 }
@@ -126,7 +123,7 @@ struct LoginTextField: View {
             
             TextField("", text: $entry)
                 .containerRelativeFrame(.vertical) { height, _ in
-                    height * 0.06
+                    height * 0.04
                 }
                 .padding(5)
                 .overlay(
@@ -136,7 +133,7 @@ struct LoginTextField: View {
             
         }
         .containerRelativeFrame(.horizontal) { width, _ in
-            width * 0.9
+            width * 0.75
         }
     }
 }
@@ -145,10 +142,12 @@ struct LoginTextField: View {
 class LoginViewModel {
     var username: String = ""
     var password: String = ""
-    var useCase: UseCase = .login
+    var useCase: UseCase
     var error: BradleError?
     
-    init() {}
+    init(useCase: UseCase) {
+        self.useCase = useCase
+    }
     
     func toggleUseCase() {
         useCase = useCase == .login ? .createAccount : .login
@@ -167,7 +166,7 @@ class LoginViewModel {
                 throw URLError(.badURL)
             }
             
-            gameRunner.account = account
+            AccountStore.shared.account = account
             print("Logged in to account.")
             
         } else {
@@ -179,7 +178,9 @@ class LoginViewModel {
             
             let newAccount = BradleAccount(username: username, password: password)
             context.insert(newAccount)
-            gameRunner.account = newAccount
+            AccountStore.shared.account = newAccount
+            AccountStore.handleFinishedGame(success: gameRunner.gameWon, numAttempts: gameRunner.submittedAttempts.count)
+            context.insert(newAccount)
             print("Account created")
         }
     }

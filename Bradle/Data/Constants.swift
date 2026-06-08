@@ -5,8 +5,10 @@
 //  Created by Brady Carden on 6/4/26.
 //
 
+import SwiftUI
+
 public struct Constants {
-    
+    static let letterSize: CGFloat = 35
     static let words = [
         "ABACK",
         "ABAFT",

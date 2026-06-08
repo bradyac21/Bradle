@@ -37,11 +37,11 @@ struct SubmittedLetterView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 0)
                     .fill(color)
-                    .border(borderColor)
+                    .strokeBorder(borderColor, lineWidth: 2)
                     .aspectRatio(1.0, contentMode: .fit)
                 
                 Text(letter.rawValue)
-                    .font(.custom(FontNames.bold, size: 30))
+                    .font(.custom(FontNames.bold, size: Constants.letterSize))
                     .foregroundStyle(letterColor)
                     .padding(.bottom, 5)
             }
@@ -62,7 +62,14 @@ struct SubmittedLetterView: View {
                 }
             }
         } animation: { phase in
-            .linear(duration: phase.duration).delay(phase == .halfway ? 0.4 * index : 0)
+            switch phase {
+            case .initial:
+                nil
+            case .halfway:
+                .easeIn(duration: phase.duration).delay(0.4 * index)
+            case .end:
+                .easeOut(duration: phase.duration)
+            }
         }
         
         .onAppear {

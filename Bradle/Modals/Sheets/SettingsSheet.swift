@@ -28,15 +28,12 @@ struct SettingsSheet: View {
                 // MARK: Settings Sheet Header
                 
                 ZStack {
-                    HStack {
-                        Spacer()
-                        
-                        Button("Close", systemImage: "xmark") {
-                            dismiss()
-                        }
-                        .labelStyle(.iconOnly)
-                        
+                    Button("Close", systemImage: "xmark") {
+                        dismiss()
                     }
+                    .labelStyle(.iconOnly)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    
                     Text("SETTINGS")
                         .font(.custom(FontNames.bold, size: 20))
                 }
@@ -84,7 +81,7 @@ struct SettingsSheet: View {
                 Divider()
                     .background(BradleColors.darkModeNotIncluded)
                 
-                if gameRunner.account != nil {
+                if AccountStore.isLoggedIn {
                     HStack {
                         Text("Log Out")
                             .font(.custom(FontNames.medium, size: 20))
@@ -92,7 +89,6 @@ struct SettingsSheet: View {
                         Button("Log Out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
                             isShowingLogOutAlert = true
                         }
-                        .disabled(gameRunner.account == nil)
                         .scaleEffect(1.3)
                         .padding(.trailing)
                         .labelStyle(.iconOnly)
@@ -101,9 +97,9 @@ struct SettingsSheet: View {
                     Divider()
                         .background(BradleColors.darkModeNotIncluded)
                 }
-                
             }
-            .padding(.vertical, 20)
+            .padding(.top, 20)
+            .padding(.bottom, 10)
             .padding(.horizontal, 25)
             .foregroundStyle(colorManager.primary)
         }
@@ -123,7 +119,7 @@ struct SettingsSheet: View {
     }
     .sheet(isPresented: .constant(true)) {
         SettingsSheet()
-            .presentationDetents([.fraction(0.4)])
+            .presentationDetents([.fraction(AccountStore.isLoggedIn ? 0.45 : 0.4)])
             .environment(ColorManager())
             .environment(GameRunner())
     }

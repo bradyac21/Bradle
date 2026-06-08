@@ -9,19 +9,18 @@ import SwiftUI
 
 struct PostgameButtons: View {
     
-    @Environment(GameRunner.self) var gameRunner
     @Environment(ColorManager.self) var colorManager
     
     var body: some View {
         VStack {
-            if let account = gameRunner.account {
-                PostgameButton(label: "See results", fill: false) {
-                    gameRunner.fullScreenCover = .results(account)
-                }
-                
-                Spacer()
-                    .frame(height: 10)
+            
+            // TODO: Need to get the case somehow
+            PostgameButton(label: "See results", fill: false) {
+                AppState.shared.fullScreenCover = .results(.fail)
             }
+            
+            Spacer()
+                .frame(height: 10)
             
             PostgameButton(label: "Play the Bradle Archive", fill: false) {
                 // TODO: Implement Bradle Archive

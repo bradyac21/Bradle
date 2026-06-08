@@ -23,9 +23,9 @@ enum Shake: CaseIterable {
         switch self {
             
         case .initial: 0
-        case .leftOne: -2
-        case .rightOne: 4
-        case .leftTwo: -4
+        case .leftOne: -6
+        case .rightOne: 8
+        case .leftTwo: -8
         case .rightTwo: 4
         case .leftThree: -4
         case .rightThree: 4
@@ -36,7 +36,7 @@ enum Shake: CaseIterable {
     }
     
     static var phases: [Shake] {
-        return Shake.allCases
+        return [.initial, .leftOne, .rightOne, .leftTwo, .done]
     }
 }
 
@@ -49,7 +49,7 @@ extension View {
             content
                 .offset(x: phase.xOffset)
         } animation: { _ in
-            .spring(duration: 0.01)
+            .linear(duration: 0.1)
         }
     }
 }

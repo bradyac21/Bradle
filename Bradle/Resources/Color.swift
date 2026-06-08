@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class BradleColors {
+enum BradleColors {
     
     static let light = Color(red: 227/255, green: 227/255, blue: 225/255)
     static let dark = Color(red: 18/255, green: 18/255, blue: 18/255)
@@ -21,7 +21,7 @@ class BradleColors {
     // border for empty letter view in light mode
     static let lightModeEmptyBorder = Color(red: 211/255, green: 214/255, blue: 218/255)
     
-    // border for a filled inprogress letter view in light mode
+    // border for a filled in progress letter view in light mode
     static let lightModeFilledBorder = Color(red: 135/255, green: 138/255, blue: 140/255)
     
     // border for empty letter view in dark mode
@@ -30,10 +30,10 @@ class BradleColors {
     // border for a filled inProgress letter view in dark mode
     static let darkModeFilledBorder = Color(red: 86/255, green: 87/255, blue: 88/255)
     
-    // dark mode not included color
+    // dark mode not included status color
     static let darkModeNotIncluded = Color(red: 58/255, green: 58/255, blue: 60/255)
     
-    // light mode not included color
+    // light mode not included status color
     static let lightModeNotIncluded = Color(red: 120/255, green: 124/255, blue: 126/255)
     
     // Used for a letter that is in the correct spot

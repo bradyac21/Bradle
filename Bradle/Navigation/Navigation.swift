@@ -13,8 +13,7 @@ enum AppLocation {
 }
 
 enum FullScreenCover: Identifiable, Equatable {
-    case gameOver
-    case results(BradleAccount)
+    case results(GameOverCase)
     
     #if DEBUG
     case testing
@@ -22,10 +21,9 @@ enum FullScreenCover: Identifiable, Equatable {
     
     var id: Int {
         switch self {
-        case .gameOver: 0
-        case .results(_): 1
+        case .results(_): 0
             #if DEBUG
-        case .testing: 2
+        case .testing: 1
             #endif
         }
     }
@@ -33,10 +31,8 @@ enum FullScreenCover: Identifiable, Equatable {
     @ViewBuilder
     var screen: some View {
         switch self {
-        case .gameOver:
-            GameOverView(gameOverCase: .victory)
-        case .results(let account):
-            ResultsView(account: account)
+        case .results(let gameOverCase):
+            ResultsView(gameOverCase: gameOverCase)
             
         #if DEBUG
         case .testing:
@@ -46,24 +42,33 @@ enum FullScreenCover: Identifiable, Equatable {
     }
 }
 
-enum BradleSheet: Int, Identifiable {
-    case login
+enum BradleSheet: Identifiable, Equatable {
+    case login(UseCase)
     case howToPlay
     case settings
     
-    var id: Int { self.rawValue }
+    var id: Int {
+        switch self {
+        case .login(_):
+            return 0
+        case .howToPlay:
+            return 1
+        case .settings:
+            return 2
+        }
+    }
     
     @ViewBuilder
     var screen: some View {
         switch self {
-        case .login:
-            LoginSheet()
+        case .login(let useCase):
+            LoginSheet(useCase: useCase)
         case .howToPlay:
             HowToPlaySheet()
                 .presentationDetents([.large])
         case .settings:
             SettingsSheet()
-                .presentationDetents([.fraction(0.4)])
+                .presentationDetents([.fraction(AccountStore.isLoggedIn ? 0.45 : 0.4)])
         }
     }
 }

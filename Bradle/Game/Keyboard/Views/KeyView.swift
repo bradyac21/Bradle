@@ -25,6 +25,7 @@ struct KeyView: View {
                 
                 key.icon
                     .foregroundStyle(colorManager[safeKey: status])
+                    .padding(.bottom, 3) // Centers letter b
                     .animation(.easeIn, value: key)
             }
         }

@@ -23,7 +23,11 @@ class BradleAccount {
     var rememberMe: Bool
     
     var winPercent: Int {
-        Int((Double(gamesWon) / Double(gamesPlayed)) * 100)
+        guard gamesPlayed != 0 else {
+            return 0
+        }
+        
+        return Int((Double(gamesWon) / Double(gamesPlayed)) * 100)
     }
     
     init(username: String, password: String) {
@@ -82,4 +86,22 @@ class BradleAccount {
             lastWonGameDate = Date.now
         }
     }
+    
+    #if DEBUG
+    static let testAccount: BradleAccount = {
+        BradleAccount(
+            username: "Test User",
+            password: "testuser",
+            gamesPlayed: 89,
+            gamesWon: 82,
+            currentStreak: 14,
+            maxStreak: 14,
+            guessHistory: [1, 2] + Array(repeating: 3, count: 12) + Array(repeating: 4, count: 26) + Array(repeating: 5, count: 27) + Array(repeating: 6, count: 15),
+            guessDistribution: [1:1, 2:1, 3:12, 4:26, 5:27, 6:15],
+            nextWordIndex: 5,
+            lastWonGameDate: Date.now,
+            rememberMe: true
+        )
+    }()
+    #endif
 }

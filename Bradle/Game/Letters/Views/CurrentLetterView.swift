@@ -20,12 +20,12 @@ struct CurrentLetterView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 0)
                 .fill(.clear)
-                .border(colorManager.currentStatusBorderColors[safeKey: status])
+                .strokeBorder(colorManager.currentStatusBorderColors[safeKey: status], lineWidth: 2)
                 .aspectRatio(1.0, contentMode: .fit)
                 .popAnimation(trigger: shouldPop)
             
             Text(letter.rawValue)
-                .font(.custom(FontNames.bold, size: 30))
+                .font(.custom(FontNames.bold, size: Constants.letterSize))
                 .foregroundStyle(colorManager.primary)
                 .padding(.bottom, 5)
         }

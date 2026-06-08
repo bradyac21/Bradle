@@ -47,7 +47,7 @@ class ColorManager {
             self.secondary = .black
         } else {
             self.gameBackground = BradleColors.lightModeBackground
-            self.defaultBackground = BradleColors.light
+            self.defaultBackground = .white
             
             self.primary = .black
             self.secondary = .white

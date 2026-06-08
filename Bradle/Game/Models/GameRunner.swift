@@ -8,10 +8,9 @@
 import SwiftUI
 import SwiftData
 
+@MainActor
 @Observable
 class GameRunner {
-    var location: AppLocation = .start
-    var account: BradleAccount?
     var modelContext: ModelContext?
     
     /// Hard mode variables
@@ -20,10 +19,6 @@ class GameRunner {
         get { UserDefaults.standard.bool(forKey: "hardModeEnabled") }
         set { UserDefaults.standard.set(newValue, forKey: "hardModeEnabled") }
     }
-    
-    /// Modals
-    var fullScreenCover: FullScreenCover?
-    var sheet: BradleSheet?
     
     /// Attempt Variables
     var submittedAttempts: [SubmittedAttempt]
@@ -48,16 +43,22 @@ class GameRunner {
     
     var targetWord: [Letter]?
     var gameComplete: Bool = false
+    var gameWon: Bool = false
+    
+    /// Used for `GuessDistView` in `ResultsView`
+    var recentGameGuessIndex: Int {
+        gameWon ? submittedAttempts.count : -1
+    }
     
     init() {
         self.keyboardManager = KeyboardManager()
         self.submittedAttempts = [SubmittedAttempt]()
         self.currentAttempt = CurrentAttempt()
+        
     }
     
     func logout() {
-        account?.rememberMe = false
-        account = nil
+        AccountStore.logout()
         
         self.keyboardManager = KeyboardManager()
         self.submittedAttempts = [SubmittedAttempt]()
@@ -65,13 +66,12 @@ class GameRunner {
         
         self.hints = []
         self.targetWord = nil
-        self.sheet = nil
-        self.location = .start
+        AppState.shared.location = .start
     }
     
     public func getTargetWord() {
         // Assign target word to random word
-        if let account, !Calendar.current.isDateInToday(account.lastWonGameDate) {
+        if let account = AccountStore.shared.account, Calendar.current.isDateInToday(account.lastWonGameDate) {
             let targetWordString = Constants.words[account.nextWordIndex]
             self.targetWord = Letter.formTargetWord(from: targetWordString)
             print("Target Word: \(targetWordString)")
@@ -80,26 +80,6 @@ class GameRunner {
             self.targetWord = Letter.formTargetWord(from: targetWordString)
         } else {
             fatalError("Could not get a target word.")
-        }
-    }
-    
-    public func loadAccount(from context: ModelContext) {
-        self.modelContext = context
-        guard let modelContext else { return }
-        
-        var descriptor = FetchDescriptor<BradleAccount>(
-            predicate: #Predicate { $0.rememberMe }
-        )
-        descriptor.fetchLimit = 1
-        
-        if let fetchedAccount = try? modelContext.fetch(descriptor).first {
-            let components = Calendar.current.dateComponents([.day], from: fetchedAccount.lastWonGameDate, to: .now)
-            let daysDifference = components.day ?? 0
-            
-            if daysDifference > 1 {
-                fetchedAccount.currentStreak = 0
-            }
-            account = fetchedAccount
         }
     }
     
@@ -139,12 +119,13 @@ class GameRunner {
             submittedAttempts.append(submittedAttempt)
             
             gameComplete = true
-            account?.handleFinishedGame(success: true, numAttempts: submittedAttempts.count)
+            gameWon = true
+            AccountStore.shared.account?.handleFinishedGame(success: true, numAttempts: submittedAttempts.count)
             try? modelContext?.save()
             
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 4_500_000_000)
-                fullScreenCover = .gameOver
+                AppState.shared.fullScreenCover = .results(.victory(submittedAttempts.count))
             }
             
             setVictoryMessage()
@@ -193,7 +174,7 @@ class GameRunner {
         // if out of attempts
         } else {
             gameComplete = true
-            account?.handleFinishedGame(success: false, numAttempts: submittedAttempts.count)
+            AccountStore.handleFinishedGame(success: false, numAttempts: submittedAttempts.count)
             try? modelContext?.save()
             
             Task {
@@ -201,7 +182,7 @@ class GameRunner {
                 showAlert(withMessage: .word(targetWord.toString()), dismiss: false)
                 
                 try? await Task.sleep(nanoseconds: 2_500_000_000)
-                fullScreenCover = .gameOver
+                AppState.shared.fullScreenCover = .results(.fail)
             }
         }
     }

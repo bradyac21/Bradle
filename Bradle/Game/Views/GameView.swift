@@ -18,7 +18,7 @@ struct GameView: View {
                 .simultaneousGesture(
                     TapGesture(count: 3)
                         .onEnded {
-                            gameRunner.fullScreenCover = .testing
+                            AppState.shared.fullScreenCover = .testing
                         }
                 )
                 #endif

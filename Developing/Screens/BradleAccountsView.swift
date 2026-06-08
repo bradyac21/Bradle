@@ -29,6 +29,7 @@ struct BradleAccountsView: View {
                                 Text("Current Streak: \(account.currentStreak)")
                                 Text("Max Streak: \(account.maxStreak)")
                                 Text("Next Word Index: \(account.nextWordIndex)")
+                                Text("Remember Me: **\(account.rememberMe.description)**")
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(.gray)
@@ -39,8 +40,8 @@ struct BradleAccountsView: View {
                                 do {
                                     let username = account.username
                                     try context?.delete(model: BradleAccount.self, where: #Predicate { $0.username == username } )
-                                    if gameRunner.account?.username == username {
-                                        gameRunner.account = nil
+                                    if AccountStore.shared.account?.username == username {
+                                        AccountStore.shared.account = nil
                                     }
                                 } catch {
                                     print("Failed to delete Account.")
@@ -50,17 +51,6 @@ struct BradleAccountsView: View {
                         }
                     }
                 }
-            }
-        }
-        .navigationTitle("Bradle Accounts")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Create Account", systemImage: "plus") {
-                    
-                }
-                .labelStyle(.iconOnly)
-                .buttonStyle(.glass)
             }
         }
     }

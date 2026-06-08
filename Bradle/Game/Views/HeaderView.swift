@@ -9,13 +9,12 @@ import SwiftUI
 
 struct HeaderView: View {
     
-    @Environment(GameRunner.self) var gameRunner
     @Environment(ColorManager.self) var colorManager
     
     public var body: some View {
         HStack {
             Button("How to Play", systemImage: "questionmark.circle") {
-                gameRunner.sheet = .howToPlay
+                AppState.shared.sheet = .howToPlay
             }
             
             Spacer()
@@ -25,8 +24,8 @@ struct HeaderView: View {
             
             Spacer()
             
-            Button("Settings", systemImage: "gear") {
-                gameRunner.sheet = .settings
+            Button("Settings", systemImage: "gearshape.fill") {
+                AppState.shared.sheet = .settings
             }
 
         }
@@ -39,6 +38,5 @@ struct HeaderView: View {
 #Preview {
     HeaderView()
         .background(BradleColors.darkModeBackground)
-        .environment(GameRunner())
         .environment(ColorManager())
 }

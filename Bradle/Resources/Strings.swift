@@ -11,7 +11,7 @@ struct Strings {
     
     static let victoryTitle = "Congratulations!"
     static let victoryBody = "Track your Bradle win\npercentage and earn\nbadges for big\nachievements."
-    static let failTitle = "Thanks for playing\n today!"
+    static let failTitle = "Thanks for playing\ntoday!"
     static let failBody = "Want to follow friends' daily\nscores, track stats and more?"
     
     // MARK: Settings Sheet

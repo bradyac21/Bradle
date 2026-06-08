@@ -12,12 +12,13 @@ import SwiftData
 struct BradleApp: App {
     @State var gameRunner = GameRunner()
     @State var colorManager = ColorManager()
+    @Bindable var appState = AppState.shared
     let container = try! ModelContainer(for: BradleAccount.self)
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                switch gameRunner.location {
+                switch appState.location {
                 case .start:
                     StartView()
                         .transition(.opacity)
@@ -27,24 +28,27 @@ struct BradleApp: App {
                 }
             }
             .onAppear {
-                gameRunner.loadAccount(from: container.mainContext)
+                AccountStore.shared.loadAccount(from: container.mainContext)
+                print("loading account")
             }
             
             // Handles transition from StartView to GameView
-            .animation(.easeInOut, value: gameRunner.location)
-            .fullScreenCover(item: $gameRunner.fullScreenCover) {
-                
-                // TODO: What case is this for?
-                if gameRunner.fullScreenCover == .gameOver {
-                    gameRunner.hideKeyboard = true
-                }
-            } content: { cover in
+            .animation(.easeInOut, value: appState.location)
+            .fullScreenCover(item: $appState.fullScreenCover) { cover in
                 cover.screen
             }
-            .sheet(item: $gameRunner.sheet) { sheet in
+            .sheet(item: $appState.sheet) { sheet in
                 sheet.screen
                     .presentationCornerRadius(12)
             }
+            #if DEBUG
+            .simultaneousGesture(
+                TapGesture(count: 3)
+                    .onEnded {
+                        AppState.shared.fullScreenCover = .testing
+                    }
+            )
+            #endif
         }
         .modelContainer(container)
         .environment(gameRunner)
