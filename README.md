@@ -11,7 +11,7 @@ Part of my morning routine is to play the day's Wordle challenge. After I succes
 As I sought to develop my iOS app development skills, it became clear to me that the best way to learn the paradigms and functionalities of the iOS suite was to build an end-to-end app. There's only so much you can do with watching tutorials and building isolated views and view models. The only issue was the idea to get it started. Then it hit me! Wordle is simple enough to be approachable, but is a fully-featured and professionally designed app that is used daily by millions of people around the world. Why don't I build it from scratch?
 
 That's exactly what I did. Starting from the template "Hello, World!" view, I built from the ground up all the screens, logic, animations, and navigation for the app to function. The various requirements for the app enabled me to explore all facets of iOS development. 
-- injected `AppManager` into the SwiftUI Environment to mange game logic, alerts, and navigation
+- injected `GameRunner` into the SwiftUI Environment to mange game logic, alerts, and navigation
 - Used `PhaseAnimator` and `.animation` to match the visually stimulating experience of the official app
 - Built a `ColorManager` to handle dynamic theming across light mode, dark mode, and accessibility color settings which persisted across sessions using UserDefaults
 
