@@ -12,7 +12,7 @@ struct CurrentAttemptView: View {
     
     public var body: some View {
         HStack(spacing: 0) {
-            ForEach(0..<5, id: \.self) { index in
+            ForEach(0..<Constants.wordSize, id: \.self) { index in
                 CurrentLetterView(letter: gameRunner.currentAttempt.letters[index])
                     .padding(.horizontal, 3)
             }

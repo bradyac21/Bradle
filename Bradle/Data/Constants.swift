@@ -10,6 +10,17 @@ import SwiftUI
 public enum Constants {
     static let letterSize: CGFloat = 35
     static let howToPlayLetterSize: CGFloat = 25
+    
+    static let wordSize: Int = 5
+    static let letterFlipDuration: CGFloat = 0.4
+    static let letterFlipPhaseDuration: CGFloat = letterFlipDuration / 2
+    static let wordFlipDuration: CGFloat = letterFlipDuration * CGFloat(wordSize)
+    static let floatDelay: CGFloat = wordFlipDuration + 0.5
+    
+    static let badgeOuter: CGFloat = 50
+    static let badgeMiddle: CGFloat = 45
+    static let badgeInner: CGFloat = 32.5
+    
     static let words = [
         "ABACK",
         "ABAFT",

@@ -24,8 +24,8 @@ enum FlipAnimation: CaseIterable {
         switch self {
             
         case .initial: 0
-        case .halfway: 0.2
-        case .end: 0.2
+        case .halfway: Constants.letterFlipPhaseDuration
+        case .end: Constants.letterFlipPhaseDuration
         }
     }
     

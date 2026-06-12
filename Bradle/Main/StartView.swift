@@ -12,6 +12,16 @@ struct StartView: View {
     
     var body: some View {
         VStack {
+            #if DEBUG
+            Button("Debug Options", systemImage: "info.circle"){
+                AppState.shared.fullScreenCover = .testing
+            }
+            .labelStyle(.iconOnly)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            .foregroundStyle(.blue)
+            #endif
+            
             Spacer()
             Image("Bradle-Logo")
                 .resizable()
@@ -60,7 +70,6 @@ struct StartView: View {
 extension StartView {
     var messageString: AttributedString {
         if let account = AccountStore.shared.account {
-            print(account)
             if account.currentStreak > 0 {
                 var attributed = AttributedString("Go ahead, add another day to\nyour \(account.currentStreak) day streak.")
                 for (range, char) in zip(attributed.characters.indices, attributed.characters) {

@@ -10,6 +10,7 @@ import Foundation
 
 @Model
 class BradleAccount {
+    var id: UUID
     var username: String
     var password: String
     var gamesPlayed: Int
@@ -20,7 +21,7 @@ class BradleAccount {
     var guessHistory: [Int]
     var nextWordIndex: Int
     var lastWonGameDate: Date
-    var rememberMe: Bool
+    var badges: [String: Int]
     
     var winPercent: Int {
         guard gamesPlayed != 0 else {
@@ -31,6 +32,7 @@ class BradleAccount {
     }
     
     init(username: String, password: String) {
+        self.id = UUID()
         self.username = username
         self.password = password
         self.gamesPlayed = 0
@@ -41,7 +43,7 @@ class BradleAccount {
         self.guessHistory = []
         self.nextWordIndex = 0
         self.lastWonGameDate = .distantPast
-        self.rememberMe = true
+        self.badges = [:]
     }
     
     init(
@@ -55,8 +57,9 @@ class BradleAccount {
         guessDistribution: [Int: Int],
         nextWordIndex: Int,
         lastWonGameDate: Date,
-        rememberMe: Bool
+        badges: [String: Int]
     ) {
+        self.id = UUID()
         self.username = username
         self.password = password
         self.gamesPlayed = gamesPlayed
@@ -67,28 +70,41 @@ class BradleAccount {
         self.guessDistribution = guessDistribution
         self.nextWordIndex = nextWordIndex
         self.lastWonGameDate = lastWonGameDate
-        self.rememberMe = rememberMe
+        self.badges = badges
     }
     
-    func handleFinishedGame(success: Bool, numAttempts: Int) {
+    func handleFinishedGame(success: Bool, submittedAttempts: [SubmittedAttempt], hardModeEnabled: Bool) {
         // allows you to play more than 1 game a day, doesn't save results past first play
-        guard !Calendar.current.isDateInToday(lastWonGameDate) else { return }
+        //guard !Calendar.current.isDateInToday(lastWonGameDate) else { return }
         
         nextWordIndex = (nextWordIndex + 1) % Constants.words.count
         gamesPlayed += 1
         
         if success {
             gamesWon += 1
-            guessHistory.append(numAttempts)
-            guessDistribution[numAttempts] = 1 + (guessDistribution[numAttempts] ?? 0)
+            guessHistory.append(submittedAttempts.count)
+            guessDistribution[submittedAttempts.count] = 1 + (guessDistribution[submittedAttempts.count] ?? 0)
             currentStreak += 1
             maxStreak = max(maxStreak, currentStreak)
             lastWonGameDate = Date.now
+            
+            for badge in Badge.allCases {
+                if badge.isSatisified(account: self, submittedAttempts: submittedAttempts, hardModeEnabled: hardModeEnabled) {
+                    if self.badges[badge.rawValue] == nil {
+                        self.badges[badge.rawValue] = 1
+                    } else if badge.allowsRepeat {
+                        // unwrap should be redundant
+                        self.badges[badge.rawValue] = self.badges[badge.rawValue] ?? 0 + 1
+                    }
+                }
+            }
         }
+        
+        
     }
     
     #if DEBUG
-    static let testAccount: BradleAccount = {
+    static let testAccount =
         BradleAccount(
             username: "Test User",
             password: "testuser",
@@ -100,8 +116,8 @@ class BradleAccount {
             guessDistribution: [1:1, 2:1, 3:12, 4:26, 5:27, 6:15],
             nextWordIndex: 5,
             lastWonGameDate: Date.now,
-            rememberMe: true
+            badges: [:]
         )
-    }()
+    
     #endif
 }

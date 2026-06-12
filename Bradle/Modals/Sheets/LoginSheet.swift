@@ -167,6 +167,14 @@ class LoginViewModel {
             }
             
             AccountStore.shared.account = account
+            if gameRunner.gameComplete {
+                AccountStore.shared.account?.handleFinishedGame(
+                    success: gameRunner.gameWon,
+                    submittedAttempts: gameRunner.submittedAttempts,
+                    hardModeEnabled: gameRunner.hardModeEnabled
+                )
+            }
+            UserDefaults.standard.set(account.id.uuidString, forKey: "remember-me-id")
             print("Logged in to account.")
             
         } else {
@@ -179,8 +187,16 @@ class LoginViewModel {
             let newAccount = BradleAccount(username: username, password: password)
             context.insert(newAccount)
             AccountStore.shared.account = newAccount
-            AccountStore.handleFinishedGame(success: gameRunner.gameWon, numAttempts: gameRunner.submittedAttempts.count)
+            
+            if gameRunner.gameComplete {
+                AccountStore.shared.account?.handleFinishedGame(
+                    success: gameRunner.gameWon,
+                    submittedAttempts: gameRunner.submittedAttempts,
+                    hardModeEnabled: gameRunner.hardModeEnabled
+                )
+            }
             context.insert(newAccount)
+            UserDefaults.standard.set(newAccount.id.uuidString, forKey: "remember-me-id")
             print("Account created")
         }
     }

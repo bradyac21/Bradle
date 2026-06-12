@@ -29,7 +29,6 @@ struct BradleApp: App {
             }
             .onAppear {
                 AccountStore.shared.loadAccount(from: container.mainContext)
-                print("loading account")
             }
             
             // Handles transition from StartView to GameView
@@ -41,14 +40,6 @@ struct BradleApp: App {
                 sheet.screen
                     .presentationCornerRadius(12)
             }
-            #if DEBUG
-            .simultaneousGesture(
-                TapGesture(count: 3)
-                    .onEnded {
-                        AppState.shared.fullScreenCover = .testing
-                    }
-            )
-            #endif
         }
         .modelContainer(container)
         .environment(gameRunner)

@@ -19,7 +19,7 @@ struct SubmittedAttemptView: View {
     
     public var body: some View {
         HStack(spacing: 0) {
-            ForEach(0..<5, id: \.self) { index in
+            ForEach(0..<Constants.wordSize, id: \.self) { index in
                 SubmittedLetterView(
                     letter: submittedAttempt.letters[index],
                     status: submittedAttempt.statuses[index],
@@ -32,7 +32,8 @@ struct SubmittedAttemptView: View {
         }
         .onAppear {
             if submittedAttempt.isTarget {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                Task {
+                    try? await Task.sleep(for: .seconds(Constants.floatDelay))
                     shouldFloat.toggle()
                 }
             }

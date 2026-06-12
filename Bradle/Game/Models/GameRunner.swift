@@ -39,7 +39,6 @@ class GameRunner {
     var isKeyboardEnabled: Bool = true // used to disable input while flip animation is active
     
     var shouldShakeCurrentAttempt: Bool = false
-    var alertMessage: AlertMessage?
     
     var targetWord: [Letter]?
     var gameComplete: Bool = false
@@ -120,7 +119,7 @@ class GameRunner {
             
             gameComplete = true
             gameWon = true
-            AccountStore.shared.account?.handleFinishedGame(success: true, numAttempts: submittedAttempts.count)
+            AccountStore.shared.account?.handleFinishedGame(success: true, submittedAttempts: submittedAttempts, hardModeEnabled: hardModeEnabled)
             try? modelContext?.save()
             
             Task { @MainActor in
@@ -174,7 +173,7 @@ class GameRunner {
         // if out of attempts
         } else {
             gameComplete = true
-            AccountStore.handleFinishedGame(success: false, numAttempts: submittedAttempts.count)
+            AccountStore.shared.account?.handleFinishedGame(success: false, submittedAttempts: submittedAttempts, hardModeEnabled: hardModeEnabled)
             try? modelContext?.save()
             
             Task {
@@ -220,13 +219,13 @@ class GameRunner {
     }
     
     func showAlert(withMessage message: AlertMessage, dismiss: Bool = true, duration: UInt64 = 1_000_000_000) {
-        alertMessage = message
+        AppState.shared.alertMessage = message
         
         if dismiss {
             Task {
                 try? await Task.sleep(nanoseconds: duration)
                 withAnimation(.easeOut(duration: 0.2)) {
-                    alertMessage = nil
+                    AppState.shared.alertMessage = nil
                 }
             }
         }

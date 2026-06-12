@@ -17,12 +17,13 @@ struct SubmittedAttempt: Identifiable, Hashable {
         Array(zip(letters, statuses))
     }
     
-    /// Default init for testing and previews
+    #if DEBUG
     init() {
         self.letters = [.R, .O, .G, .U, .E]
         self.statuses = [.correct, .included, .notIncluded, .notIncluded, .included]
         self.isTarget = true
     }
+    #endif
     
     init(letter: [Letter], statuses: [SubmittedStatus], isTarget: Bool = false) {
         self.letters = letter
