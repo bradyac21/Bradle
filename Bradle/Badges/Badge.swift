@@ -9,24 +9,62 @@ import SwiftUI
 
 enum Badge: String, Hashable, Codable, CaseIterable {
     case fourteenDayStreak = "14-day Streak"
-        case seaOfGreens = "Sea of Greens"
-        case wordleIn2 = "Wordle in 2"
-        case wordleIn1 = "Wordle in 1"
-        case hardMode = "Hard Mode"
-        case thirtyDayStreak = "30-day Streak"
-        case thousandWordles = "1000 Wordles"
-        case fifteenHundredWordles = "1500 Wordles"
+    case seaOfGreens = "Sea of Greens"
+    case wordleIn2 = "Wordle in 2"
+    case wordleIn1 = "Wordle in 1"
+    case hardMode = "Hard Mode"
+    case thirtyDayStreak = "30-day Streak"
+    case thousandWordles = "1000 Wordles"
+    case fifteenHundredWordles = "1500 Wordles"
     
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(self.rawValue.hashValue)
+    func description(earnedCount: Int) -> String {
+        
+        var res = earnedCount == 0 ? "Earn " : "You earned "
+        switch self {
+            
+        case .fourteenDayStreak:
+            res += "this badge \(earnedCount > 1 ? "\(earnedCount) times " : "")by completing 14 consecutive daily Wordle puzzles without losing."
+        case .seaOfGreens:
+            res += "this badge \(earnedCount > 1 ? "\(earnedCount) times " : "")by successfully completing a Wordle puzzle while only getting green and gray letters (or orange and gray letters if playing in high contrast mode)"
+        case .wordleIn2:
+            res += "this badge \(earnedCount > 1 ? "\(earnedCount) times " : "")by solving a World puzzle in 2 guesses."
+        case .wordleIn1:
+            res += "this badge \(earnedCount > 1 ? "\(earnedCount) times " : "")by solving a Wordle puzzle in 1 guess."
+        case .hardMode:
+            res += "this badge \(earnedCount > 1 ? "\(earnedCount) times " : "")by successfully completing a Wordle puzzle in Hard Mode. Turn on Hard Mode in Wordle's settings menu."
+        case .thirtyDayStreak:
+            res += "this badge \(earnedCount > 1 ? "\(earnedCount) times " : "")by completing 30 consecutive daily Wordle puzzles without losing."
+        case .thousandWordles:
+            res += "this badge\(earnedCount > 1 ? "\(earnedCount) times " : "") by completing 1000 Wordle puzzles, on any date, win or lose."
+        case .fifteenHundredWordles:
+            res += "this badge \(earnedCount > 1 ? "\(earnedCount) times " : "")by completing 1500 Wordle puzzles, on any date, win or lose."
+        }
+        
+        return res
     }
     
-    var allowsRepeat: Bool {
+    var targetVal: Int {
         switch self {
-        case .fourteenDayStreak, .seaOfGreens, .wordleIn1, .wordleIn2, .hardMode, .thirtyDayStreak:
-            return true
+        case .fourteenDayStreak: 14
+        case .thirtyDayStreak: 30
+        case .thousandWordles: 1000
+        case .fifteenHundredWordles: 1500
+        default: 1
+        }
+    }
+    
+    var badgeProgess: (currentProgress: Int, targetVal: Int)? {
+        guard let account = AccountStore.shared.account else { return nil }
+        
+        switch self {
+        case .fourteenDayStreak, .thirtyDayStreak:
+            return (account.currentStreak, self.targetVal)
         case .thousandWordles, .fifteenHundredWordles:
-            return false
+            return (account.gamesWon, self.targetVal)
+        
+        // Single game badges, no progress
+        case .seaOfGreens, .wordleIn1, .wordleIn2, .hardMode:
+            return nil
         }
     }
     
@@ -51,26 +89,26 @@ enum Badge: String, Hashable, Codable, CaseIterable {
             return account.currentStreak == 30
 
         case .thousandWordles:
-            return account.gamesWon == 1000
+            return account.gamesPlayed == 1000
 
         case .fifteenHundredWordles:
-            return account.gamesWon == 1500
+            return account.gamesPlayed == 1500
         }
     }
 }
 
 extension Badge {
     @ViewBuilder
-    var icon: some View {
+    var icon: some View {        
         switch self {
         case .fourteenDayStreak:
             FourteenDayStreakBadge()
         case .seaOfGreens:
             SeaOfGreensBadge()
         case .wordleIn2:
-            WordleInTwo()
+            WordleInTwoBadge()
         case .wordleIn1:
-            WordleInOne()
+            WordleInOneBadge()
         case .hardMode:
             HardModeBadge()
         case .thirtyDayStreak:
@@ -80,15 +118,5 @@ extension Badge {
         case .fifteenHundredWordles:
             FifteenHundredWordlesBadge()
         }
-    }
-}
-
-class BadgeManager {
-    var account: BradleAccount
-    var gameRunner: GameRunner
-    
-    init(account: BradleAccount, gameRunner: GameRunner) {
-        self.account = account
-        self.gameRunner = gameRunner
     }
 }

@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct FourteenDayStreakBadge: View {
+    
     var body: some View {
-        Image(systemName: "14.circle.fill").foregroundStyle(BradleColors.green)
-            .font(.system(size: Constants.badgeOuter))
+        VStack {
+            Image(systemName: "14.circle.fill").foregroundStyle(BradleColors.green)
+                .font(.system(size: Constants.badgeOuter))
+        }
     }
 }
 
 #Preview {
-    FourteenDayStreakBadge()
+    VStack {
+        FourteenDayStreakBadge()
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.gray)
 }

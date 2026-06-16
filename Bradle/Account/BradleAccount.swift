@@ -92,7 +92,7 @@ class BradleAccount {
                 if badge.isSatisified(account: self, submittedAttempts: submittedAttempts, hardModeEnabled: hardModeEnabled) {
                     if self.badges[badge.rawValue] == nil {
                         self.badges[badge.rawValue] = 1
-                    } else if badge.allowsRepeat {
+                    } else {
                         // unwrap should be redundant
                         self.badges[badge.rawValue] = self.badges[badge.rawValue] ?? 0 + 1
                     }
@@ -110,13 +110,13 @@ class BradleAccount {
             password: "testuser",
             gamesPlayed: 89,
             gamesWon: 82,
-            currentStreak: 14,
+            currentStreak: 13,
             maxStreak: 14,
             guessHistory: [1, 2] + Array(repeating: 3, count: 12) + Array(repeating: 4, count: 26) + Array(repeating: 5, count: 27) + Array(repeating: 6, count: 15),
             guessDistribution: [1:1, 2:1, 3:12, 4:26, 5:27, 6:15],
             nextWordIndex: 5,
             lastWonGameDate: Date.now,
-            badges: [:]
+            badges: [Badge.seaOfGreens.rawValue: 14, Badge.hardMode.rawValue: 3, Badge.wordleIn1.rawValue: 1, Badge.wordleIn2.rawValue: 4]
         )
     
     #endif

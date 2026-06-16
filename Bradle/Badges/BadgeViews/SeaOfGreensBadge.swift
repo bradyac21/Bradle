@@ -11,7 +11,7 @@ struct SeaOfGreensBadge: View {
     var body: some View {
         ZStack {
             Circle()
-                .foregroundStyle(BadgeColors.mint)
+                .foregroundStyle(BradleColors.yellow)
                 .frame(width: Constants.badgeOuter)
             Circle()
                 .strokeBorder(.black, lineWidth: 2)
@@ -25,8 +25,8 @@ struct SeaOfGreensBadge: View {
                 .resizable()
                 .aspectRatio(1.0, contentMode: .fit)
                 .frame(width: 20)
-
         }
+        .frame(width: Constants.badgeOuter, height: Constants.badgeOuter)
     }
 }
 

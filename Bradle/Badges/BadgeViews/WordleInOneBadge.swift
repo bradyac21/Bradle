@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WordleInOne: View {
+struct WordleInOneBadge: View {
     var body: some View {
         ZStack {
             Circle()
@@ -27,9 +27,10 @@ struct WordleInOne: View {
                 .shadow(color: .black, radius: 4, x: 0, y: 0)
 
         }
+        .frame(width: Constants.badgeOuter, height: Constants.badgeOuter)
     }
 }
 
 #Preview {
-    WordleInOne()
+    WordleInOneBadge()
 }

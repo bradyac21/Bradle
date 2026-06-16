@@ -20,6 +20,7 @@ public enum Constants {
     static let badgeOuter: CGFloat = 50
     static let badgeMiddle: CGFloat = 45
     static let badgeInner: CGFloat = 32.5
+    static let badgeProgressFontSize: CGFloat = 12
     
     static let words = [
         "ABACK",

@@ -10,7 +10,7 @@ import Foundation
 
 @Observable
 class AccountStore {
-    static let shared = AccountStore()
+    static let shared = AccountStore(5)
     private static var context: ModelContext?
     var account: BradleAccount?
     
@@ -58,15 +58,16 @@ class AccountStore {
         shared.account = nil
     }
     
-    public static var earnedBadges: [Badge] {
+    public static var earnedBadges: [(badge: Badge, earnedCount: Int)] {
         guard let account = shared.account else {
             return []
         }
         
-        return Array(account.badges.keys.compactMap { Badge(rawValue: $0) })
+        return Array(account.badges.keys.compactMap { (Badge(rawValue: $0)!, account.badges[$0] ?? -1) }) // default should be redundant
     }
     
-    public static var unearnedBadges: [Badge] {
-        return Badge.allCases.filter { !earnedBadges.contains($0) } 
-    }
+//    public static var unearnedBadges: [Badge] {
+//        let earned = earnedBadges.map { $0 }
+//        return Badge.allCases.filter { !earnedBadges.contains( }
+//    }
 }

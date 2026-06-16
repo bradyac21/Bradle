@@ -32,7 +32,6 @@ enum AlertMessage {
         case .word(let word): word
             
         case .cannotEnableHardMode: "Hard mode can only be enabled at the start of a round"
-            
         case .unsatisfiedHint(let hint): getUnsatisfiedHintMessage(for: hint)
             
         case .victoryIn1: "Perfection!"

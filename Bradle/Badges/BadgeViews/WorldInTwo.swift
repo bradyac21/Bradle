@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WordleInTwo: View {
+struct WordleInTwoBadge: View {
     var body: some View {
         ZStack {
             Circle()
@@ -15,7 +15,7 @@ struct WordleInTwo: View {
                 .frame(width: Constants.badgeOuter)
             Circle()
                 .strokeBorder(.black, lineWidth: 2)
-                .background(Circle().fill(BadgeColors.mint))
+                .background(Circle().fill(BradleColors.green))
                 .frame(width: Constants.badgeMiddle)
             Circle()
                 .strokeBorder(.black, lineWidth: 3)
@@ -27,13 +27,14 @@ struct WordleInTwo: View {
                 .shadow(color: .black, radius: 4, x: 0, y: 0)
 
         }
+        .frame(width: Constants.badgeOuter, height: Constants.badgeOuter)
     }
 }
 
 #Preview {
     ZStack {
         Color.black.ignoresSafeArea()
-        WordleInTwo()
+        WordleInTwoBadge()
     }
     
 }
