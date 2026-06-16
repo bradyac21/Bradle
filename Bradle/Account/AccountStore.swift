@@ -66,8 +66,5 @@ class AccountStore {
         return Array(account.badges.keys.compactMap { (Badge(rawValue: $0)!, account.badges[$0] ?? -1) }) // default should be redundant
     }
     
-//    public static var unearnedBadges: [Badge] {
-//        let earned = earnedBadges.map { $0 }
-//        return Badge.allCases.filter { !earnedBadges.contains( }
-//    }
+
 }

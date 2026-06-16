@@ -75,7 +75,7 @@ class BradleAccount {
     
     func handleFinishedGame(success: Bool, submittedAttempts: [SubmittedAttempt], hardModeEnabled: Bool) {
         // allows you to play more than 1 game a day, doesn't save results past first play
-        //guard !Calendar.current.isDateInToday(lastWonGameDate) else { return }
+        guard !Calendar.current.isDateInToday(lastWonGameDate) else { return }
         
         nextWordIndex = (nextWordIndex + 1) % Constants.words.count
         gamesPlayed += 1
