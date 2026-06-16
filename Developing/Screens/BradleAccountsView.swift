@@ -23,13 +23,13 @@ struct BradleAccountsView: View {
                     ForEach(accounts, id: \.username) { account in
                         DisclosureGroup(account.username) {
                             VStack(alignment: .leading) {
+                                Text("ID: \(account.id)")
                                 Text("Password: \(account.password)")
                                 Text("Games Played: \(account.gamesPlayed)")
                                 Text("Games Won: \(account.gamesWon)")
                                 Text("Current Streak: \(account.currentStreak)")
                                 Text("Max Streak: \(account.maxStreak)")
                                 Text("Next Word Index: \(account.nextWordIndex)")
-                                Text("Remember Me: **\(account.rememberMe.description)**")
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(.gray)

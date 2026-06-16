@@ -17,7 +17,9 @@ struct HowToPlaySheet: View {
             Button("Dismiss", systemImage: "xmark") {
                 dismiss()
             }
+            .labelStyle(.iconOnly)
             .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.trailing)
             
             VStack(alignment: .leading) {
                 
@@ -44,7 +46,6 @@ struct HowToPlaySheet: View {
                 RogueExampleWord()
                 ExampleWordMessage(letter: .U, message: "is not in the word in any spot.")
  
-                // divider
                 Divider()
                     .frame(height: 2)
                     .background(.white)
@@ -57,14 +58,13 @@ struct HowToPlaySheet: View {
                         .aspectRatio(1.0, contentMode: .fit)
                         .frame(width: 25)
                         .padding(.trailing, 5)
-                    Text("[Log in or create a free NYT account](#) to\nlink your stats")
+                    Text("Log in or create a free NYT account to\nlink your stats")
                         .font(.custom(FontNames.normal, size: 15))
                         .lineSpacing(5)
                 }
                 .padding(.vertical, 8)
                 
                 
-                // divider
                 Divider()
                     .frame(height: 2)
                     .background(.white)

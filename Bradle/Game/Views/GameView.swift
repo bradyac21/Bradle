@@ -14,14 +14,6 @@ struct GameView: View {
     var body: some View {
         ZStack {
             colorManager.defaultBackground.ignoresSafeArea()
-                #if DEBUG
-                .simultaneousGesture(
-                    TapGesture(count: 3)
-                        .onEnded {
-                            AppState.shared.fullScreenCover = .testing
-                        }
-                )
-                #endif
             VStack(alignment: .center, spacing: 0) {
                 HeaderView()
                     .containerRelativeFrame([.horizontal, .vertical]) { size, axis in
@@ -52,7 +44,7 @@ struct GameView: View {
                 }
             }
             
-            if let alertMessage = gameRunner.alertMessage {
+            if let alertMessage = AppState.shared.alertMessage {
                 Text(alertMessage.string)
                     .font(.custom(FontNames.bold, size: 15))
                     .foregroundStyle(colorManager.secondary)

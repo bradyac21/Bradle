@@ -46,6 +46,7 @@ enum BradleSheet: Identifiable, Equatable {
     case login(UseCase)
     case howToPlay
     case settings
+    case badges
     
     var id: Int {
         switch self {
@@ -55,6 +56,8 @@ enum BradleSheet: Identifiable, Equatable {
             return 1
         case .settings:
             return 2
+        case .badges:
+            return 3
         }
     }
     
@@ -69,6 +72,8 @@ enum BradleSheet: Identifiable, Equatable {
         case .settings:
             SettingsSheet()
                 .presentationDetents([.fraction(AccountStore.isLoggedIn ? 0.45 : 0.4)])
+        case .badges:
+            BadgesSheet()
         }
     }
 }

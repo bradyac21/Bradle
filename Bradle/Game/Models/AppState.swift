@@ -22,10 +22,6 @@ class AppState {
             fullScreenCover = nil
             sheet = nil
         }
-        
-        didSet {
-            print("location updated")
-        }
     }
     
     var sheet: BradleSheet? {
@@ -33,10 +29,6 @@ class AppState {
             if fullScreenCover != nil {
                 fullScreenCover = nil
             }
-        }
-        
-        didSet {
-            print("sheet updated")
         }
     }
     
@@ -46,11 +38,9 @@ class AppState {
                 sheet = nil
             }
         }
-        
-        didSet {
-            print("fullScreenCover updated")
-        }
     }
+    
+    var alertMessage: AlertMessage?
     
 }
 

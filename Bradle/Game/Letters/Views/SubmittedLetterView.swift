@@ -43,7 +43,7 @@ struct SubmittedLetterView: View {
                     .aspectRatio(1.0, contentMode: .fit)
                 
                 Text(letter.rawValue)
-                    .font(.custom(FontNames.bold, size: Constants.letterSize))
+                    .font(.custom(FontNames.bold, size: letterSize))
                     .foregroundStyle(letterColor)
                     .padding(.bottom, 5)
             }
@@ -53,6 +53,10 @@ struct SubmittedLetterView: View {
             
             // Changes colors while tile is hidden
             .onChange(of: phase) { _, newValue in
+                if newValue == .initial && index == 0 {
+                    gameRunner.isKeyboardEnabled = false
+                }
+                
                 if newValue == .end {
                     color = colorManager.submittedStatusColors[safeKey: status]
                     borderColor = .clear
@@ -68,7 +72,7 @@ struct SubmittedLetterView: View {
             case .initial:
                 nil
             case .halfway:
-                .easeIn(duration: phase.duration).delay(0.4 * index)
+                    .easeIn(duration: phase.duration).delay(Constants.letterFlipDuration * index)
             case .end:
                 .easeOut(duration: phase.duration)
             }

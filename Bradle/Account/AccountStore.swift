@@ -10,25 +10,32 @@ import Foundation
 
 @Observable
 class AccountStore {
-    static let shared = AccountStore()
+    static let shared = AccountStore(5)
     private static var context: ModelContext?
     var account: BradleAccount?
     
     private init() {}
     
-    #if DEBUG
+#if DEBUG
     private init(_ val: Any) {
         account = BradleAccount.testAccount
     }
-    #endif
+#endif
     
     static var isLoggedIn: Bool {
         shared.account != nil
     }
     
     public func loadAccount(from context: ModelContext) {
+        guard
+            let savedIdString = UserDefaults.standard.string(forKey: "remember-me-id"),
+            let savedId = UUID(uuidString: savedIdString)
+        else {
+            return
+        }
+        
         var descriptor = FetchDescriptor<BradleAccount>(
-            predicate: #Predicate { $0.rememberMe }
+            predicate: #Predicate { $0.id == savedId }
         )
         descriptor.fetchLimit = 1
         
@@ -46,13 +53,18 @@ class AccountStore {
     }
     
     public static func logout() {
-        print(shared.account == nil)
-        shared.account?.rememberMe = false
+        UserDefaults.standard.set(nil, forKey: "remember-me-id")
         try? context?.save()
         shared.account = nil
     }
     
-    static func handleFinishedGame(success: Bool, numAttempts: Int) {
-        shared.account?.handleFinishedGame(success: success, numAttempts: numAttempts)
+    public static var earnedBadges: [(badge: Badge, earnedCount: Int)] {
+        guard let account = shared.account else {
+            return []
+        }
+        
+        return Array(account.badges.keys.compactMap { (Badge(rawValue: $0)!, account.badges[$0] ?? -1) }) // default should be redundant
     }
+    
+
 }
