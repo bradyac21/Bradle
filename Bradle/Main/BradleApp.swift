@@ -46,4 +46,3 @@ struct BradleApp: App {
         .environment(colorManager)
     }
 }
-

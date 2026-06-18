@@ -41,8 +41,10 @@ struct SubmittedAttemptView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     SubmittedAttemptView(for: SubmittedAttempt())
         .environment(GameRunner())
         .environment(ColorManager())
 }
+#endif

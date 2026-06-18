@@ -10,33 +10,34 @@ import SwiftUI
 struct ProgressBar: View {
     let currentVal: Int
     let targetVal: Int
-    let progressWidth: CGFloat
+    let size: BadgeSize
     
-    init(currentVal: Int, targetVal: Int) {
+    init(currentVal: Int, targetVal: Int, size: BadgeSize = .small) {
         self.currentVal = currentVal
         self.targetVal = targetVal
-        self.progressWidth = CGFloat(24 * (Float(currentVal) / Float(targetVal)))
+        self.size = size
     }
     
     var body: some View {
         HStack {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white)
-                        .frame(height: 12.8)
+                    RoundedRectangle(cornerRadius: 8 * size.constant)
+                        .stroke(.white, lineWidth: size.constant)
+                        .frame(height: 12.8 * size.constant)
                     
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 8 * size.constant)
                         .fill(.white)
-                        .frame(width: geometry.size.width * CGFloat(currentVal) / CGFloat(targetVal))
-                        .frame(height: 6.4)
-                        .padding(.horizontal, 3.2)
+                        .frame(width: geometry.size.width * (CGFloat(currentVal) / CGFloat(targetVal) * 0.9))
+                        .frame(height: 6.4  * size.constant)
+                        .padding(.horizontal, 3.2 * size.constant)
                 }
             }
-            .frame(width: 32, height: 12.8)
+            .frame(width: 32 * size.constant, height: 12.8 * size.constant)
+            
             Text("\(currentVal.description)/\(targetVal.description)")
                 .foregroundStyle(BradleColors.lightModeBackground)
-                .font(.custom(FontNames.mediumFancy, size: Constants.badgeProgressFontSize))
+                .font(.custom(FontNames.mediumFancy, size: Constants.badgeProgressFontSize * size.constant))
                 .bold()
         }
     }

@@ -70,11 +70,11 @@ class GameRunner {
     
     public func getTargetWord() {
         // Assign target word to random word
-        if let account = AccountStore.shared.account, Calendar.current.isDateInToday(account.lastWonGameDate) {
-            let targetWordString = Constants.words[account.nextWordIndex]
-            self.targetWord = Letter.formTargetWord(from: targetWordString)
-            print("Target Word: \(targetWordString)")
-        } else if let targetWordString = Constants.words.randomElement() {
+//        if let account = AccountStore.shared.account, Calendar.current.isDateInToday(account.lastWonGameDate) {
+//            let targetWordString = Constants.words[account.nextWordIndex]
+//            self.targetWord = Letter.formTargetWord(from: targetWordString)
+//            print("Target Word: \(targetWordString)")
+/*        } else*/ if let targetWordString = Constants.words.randomElement() {
             print("Target Word: \(targetWordString)")
             self.targetWord = Letter.formTargetWord(from: targetWordString)
         } else {

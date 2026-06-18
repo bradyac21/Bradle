@@ -99,24 +99,47 @@ enum Badge: String, Hashable, Codable, CaseIterable {
 
 extension Badge {
     @ViewBuilder
-    var icon: some View {        
+    func icon(size: BadgeSize = .small) -> some View {
         switch self {
         case .fourteenDayStreak:
-            FourteenDayStreakBadge()
+            FourteenDayStreakBadge(size: size)
         case .seaOfGreens:
-            SeaOfGreensBadge()
+            SeaOfGreensBadge(size: size)
         case .wordleIn2:
-            WordleInTwoBadge()
+            WordleInTwoBadge(size: size)
         case .wordleIn1:
-            WordleInOneBadge()
+            WordleInOneBadge(size: size)
         case .hardMode:
-            HardModeBadge()
+            HardModeBadge(size: size)
         case .thirtyDayStreak:
-            ThirtyDayStreakBadge()
+            ThirtyDayStreakBadge(size: size)
         case .thousandWordles:
-            ThousandWordlesBadge()
+            ThousandWordlesBadge(size: size)
         case .fifteenHundredWordles:
-            FifteenHundredWordlesBadge()
+            FifteenHundredWordlesBadge(size: size)
+        }
+    }
+    
+    @ViewBuilder
+    func pulseIcon(size: BadgeSize = .large) -> some View {
+        switch self {
+            
+        case .fourteenDayStreak:
+            FourteenDayStreakPulseBadge(size: size)
+        case .seaOfGreens:
+            SeaOfGreensPulseBadge(size: size)
+        case .wordleIn2:
+            WordleInOnePulseBadge(size: size)
+        case .wordleIn1:
+            WordleInOnePulseBadge(size: size)
+        case .hardMode:
+            HardModeBadge(size: size)
+        case .thirtyDayStreak:
+            ThirtyDayStreakPulseBadge(size: size)
+        case .thousandWordles:
+            ThousandWordlesPulseBadge(size: size)
+        case .fifteenHundredWordles:
+            FifteenHundredWordlesPulseBadge(size: size)
         }
     }
 }

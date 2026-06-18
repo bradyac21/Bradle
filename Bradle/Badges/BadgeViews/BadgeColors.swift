@@ -12,3 +12,15 @@ enum BadgeColors {
     static let gray = Color(red: 212, green: 214, blue: 220)
     static let background = Color(red: 42, green: 42, blue: 42)
 }
+
+enum BadgeSize {
+    case small
+    case large
+    
+    var constant: CGFloat {
+        switch self {
+        case .small: 1
+        case .large: 3
+        }
+    }
+}

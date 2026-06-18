@@ -36,7 +36,7 @@ enum Shake: CaseIterable {
     }
     
     static var phases: [Shake] {
-        return [.initial, .leftOne, .rightOne, .leftTwo, .done]
+        return [.initial, .leftOne, .rightOne, .leftTwo, .rightThree, .leftTwo, .done]
     }
 }
 
@@ -49,7 +49,7 @@ extension View {
             content
                 .offset(x: phase.xOffset)
         } animation: { _ in
-            .linear(duration: 0.1)
+                .linear(duration: 0.05)
         }
     }
 }

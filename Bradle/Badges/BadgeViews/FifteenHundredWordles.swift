@@ -8,25 +8,53 @@
 import SwiftUI
 
 struct FifteenHundredWordlesBadge: View {
+    let size: BadgeSize
+    
+    init(size: BadgeSize = .small) {
+        self.size = size
+    }
+    
     var body: some View {
         ZStack {
             Image(systemName: "hexagon.fill")
                 .resizable()
                 .aspectRatio(1.0, contentMode: .fit)
-                .frame(width: Constants.badgeOuter)
+                .frame(width: Constants.badgeOuter * size.constant)
                 .foregroundStyle(BradleColors.yellow)
             Image(systemName: "hexagon")
                 .resizable()
                 .aspectRatio(1.0, contentMode: .fit)
-
-                .frame(width: Constants.badgeMiddle)
+                .frame(width: Constants.badgeMiddle * size.constant)
                 .foregroundStyle(BradleColors.green)
             Text("1500")
-                .font(.custom(FontNames.mainTitle, size: 17.5))
+                .font(.custom(FontNames.mainTitle, size: 17.5 * size.constant))
         }
     }
 }
 
 #Preview {
     FifteenHundredWordlesBadge()
+}
+
+struct FifteenHundredWordlesPulseBadge: View {
+    let size: BadgeSize
+    
+    init(size: BadgeSize = .small) {
+        self.size = size
+    }
+    
+    var body: some View {
+        ZStack {
+            Image(systemName: "hexagon.fill")
+                .resizable()
+                .aspectRatio(1.0, contentMode: .fit)
+                .frame(width: Constants.badgeOuter * size.constant)
+                .foregroundStyle(BradleColors.yellow)
+            Image(systemName: "hexagon")
+                .resizable()
+                .aspectRatio(1.0, contentMode: .fit)
+                .frame(width: Constants.badgeMiddle * size.constant)
+                .foregroundStyle(BradleColors.green)
+        }
+    }
 }

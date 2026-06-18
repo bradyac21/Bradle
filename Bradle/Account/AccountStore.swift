@@ -10,7 +10,7 @@ import Foundation
 
 @Observable
 class AccountStore {
-    static let shared = AccountStore(5)
+    static let shared = AccountStore()
     private static var context: ModelContext?
     var account: BradleAccount?
     
@@ -48,7 +48,6 @@ class AccountStore {
             }
             account = fetchedAccount
         }
-        
         Self.context = context
     }
     

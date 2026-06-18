@@ -4,6 +4,7 @@
 //
 //  Created by Brady Carden on 3/3/26.
 //
+#if DEBUG
 
 import SwiftUI
 
@@ -174,3 +175,4 @@ struct StatusTile2: View {
     }
 }
 
+#endif
