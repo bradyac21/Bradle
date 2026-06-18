@@ -14,9 +14,7 @@ class AccountStore {
     private static var context: ModelContext?
     var account: BradleAccount?
     
-    private init() {
-        account = BradleAccount.testAccount
-    }
+    private init() {}
     
 #if DEBUG
     private init(_ val: Any) {
@@ -29,28 +27,27 @@ class AccountStore {
     }
     
     public func loadAccount(from context: ModelContext) {
-//        guard
-//            let savedIdString = UserDefaults.standard.string(forKey: "remember-me-id"),
-//            let savedId = UUID(uuidString: savedIdString)
-//        else {
-//            return
-//        }
-//        
-//        var descriptor = FetchDescriptor<BradleAccount>(
-//            predicate: #Predicate { $0.id == savedId }
-//        )
-//        descriptor.fetchLimit = 1
-//        
-//        if let fetchedAccount = try? context.fetch(descriptor).first {
-//            let components = Calendar.current.dateComponents([.day], from: fetchedAccount.lastWonGameDate, to: .now)
-//            let daysDifference = components.day ?? 0
-//            
-//            if daysDifference > 1 {
-//                fetchedAccount.currentStreak = 0
-//            }
-//            account = fetchedAccount
-//        }
-//        account = BradleAccount.testAccount
+        guard
+            let savedIdString = UserDefaults.standard.string(forKey: "remember-me-id"),
+            let savedId = UUID(uuidString: savedIdString)
+        else {
+            return
+        }
+        
+        var descriptor = FetchDescriptor<BradleAccount>(
+            predicate: #Predicate { $0.id == savedId }
+        )
+        descriptor.fetchLimit = 1
+        
+        if let fetchedAccount = try? context.fetch(descriptor).first {
+            let components = Calendar.current.dateComponents([.day], from: fetchedAccount.lastWonGameDate, to: .now)
+            let daysDifference = components.day ?? 0
+            
+            if daysDifference > 1 {
+                fetchedAccount.currentStreak = 0
+            }
+            account = fetchedAccount
+        }
         Self.context = context
     }
     
