@@ -10,6 +10,7 @@ import SwiftUI
 struct GameView: View {
     @Environment(GameRunner.self) var gameRunner
     @Environment(ColorManager.self) var colorManager
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack {
@@ -61,6 +62,13 @@ struct GameView: View {
         }
         .task {
             gameRunner.getTargetWord()
+        }
+        .onChange(of: colorScheme) {
+            if colorScheme == .dark {
+                colorManager.darkModeEnabled = true
+            } else {
+                colorManager.darkModeEnabled = false
+            }
         }
         .background(colorManager.gameBackground)
     }
