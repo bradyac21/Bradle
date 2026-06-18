@@ -103,7 +103,6 @@ class BradleAccount {
         
     }
     
-    #if DEBUG
     static let testAccount =
         BradleAccount(
             username: "Test User",
@@ -119,5 +118,4 @@ class BradleAccount {
             badges: [Badge.seaOfGreens.rawValue: 14, Badge.hardMode.rawValue: 3, Badge.wordleIn1.rawValue: 1, Badge.wordleIn2.rawValue: 4]
         )
     
-    #endif
 }

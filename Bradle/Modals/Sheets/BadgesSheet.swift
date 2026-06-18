@@ -11,7 +11,6 @@ struct BadgesSheet: View {
     @Environment(\.dismiss) var dismiss
     @State var selectedBadge: Badge? = nil
     @State var earnedCount: Int = 0
-    @State var badgeHeight: CGFloat = .zero
     
     var body: some View {
         ZStack {
@@ -97,7 +96,6 @@ struct BadgesSheet: View {
             }
             .padding(.top, 45)
             
-            
             if selectedBadge != nil {
                 Rectangle()
                     .fill(.ultraThinMaterial)
@@ -121,22 +119,16 @@ struct BadgesSheet: View {
                             Spacer()
                             
                             if let selectedBadge {
-                                BadgeView(badge: selectedBadge, earnedCount: earnedCount)
-                                    .scaleEffect(3.0)
+                                BadgeView(badge: selectedBadge, earnedCount: earnedCount, size: .large, shouldAnimate: earnedCount > 0)
                                     .grayscale(earnedCount == 0 ? 1.0 : 0.0)
-                                    .onGeometryChange(for: CGFloat.self) { proxy in
-                                        proxy.size.height
-                                    } action: { height in
-                                        badgeHeight = height
-                                    }
                                 
                                 Text(selectedBadge.description(earnedCount: earnedCount))
                                     .multilineTextAlignment(.center)
-                                    .padding(.top, badgeHeight + 20)
                                     .containerRelativeFrame(.horizontal) { width, _ in
                                         width * 0.75
                                     }
                                     .foregroundStyle(.white)
+                                    .padding(.top)
                             }
                             Spacer()
                             Spacer()

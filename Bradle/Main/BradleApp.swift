@@ -14,6 +14,7 @@ struct BradleApp: App {
     @State var colorManager = ColorManager()
     @Bindable var appState = AppState.shared
     let container = try! ModelContainer(for: BradleAccount.self)
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some Scene {
         WindowGroup {
@@ -39,6 +40,13 @@ struct BradleApp: App {
             .sheet(item: $appState.sheet) { sheet in
                 sheet.screen
                     .presentationCornerRadius(12)
+            }
+        }
+        .onChange(of: colorScheme) {
+            if colorScheme == .dark {
+                colorManager.darkModeEnabled = true
+            } else {
+                colorManager.darkModeEnabled = false
             }
         }
         .modelContainer(container)
